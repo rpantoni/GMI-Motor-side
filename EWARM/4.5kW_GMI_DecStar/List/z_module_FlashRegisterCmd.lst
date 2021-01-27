@@ -1,0 +1,494 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.50.1.245/W32 for ARM         15/Jan/2021  15:11:54
+# Copyright 1999-2020 IAR Systems AB.
+#
+#    Cpu mode                        
+#    Endian                       =  little
+#    Source file                  =
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\FlexMouse\UniversalProtocol\z_module_FlashRegisterCmd.c
+#    Command line                 =
+#        -f C:\Users\610067427\AppData\Local\Temp\EWD48F.tmp
+#        (C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\FlexMouse\UniversalProtocol\z_module_FlashRegisterCmd.c
+#        -D ARM_MATH_CM4 -D USE_FULL_LL_DRIVER -D USE_HAL_DRIVER -D STM32F302x8
+#        -lCN
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\4.5kW_GMI_DecStar\List
+#        -o
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\4.5kW_GMI_DecStar\Obj
+#        --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.5\arm\inc\c\DLib_Config_Full.h" -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../Inc\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../Drivers/STM32F3xx_HAL_Driver/Inc\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/F3xx/Inc\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/UILibrary/Inc\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/SystemDriveParams\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../Drivers/CMSIS/Device/ST/STM32F3xx/Include\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../Drivers/CMSIS/Include\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../Drivers/CMSIS/DSP/Include\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Drivers\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Features\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Kernel\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Memory\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Regal\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\UniversalProtocol\
+#        -I
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Motor\
+#        -Ohz)
+#    Locale                       =  C
+#    List file                    =
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\4.5kW_GMI_DecStar\List\z_module_FlashRegisterCmd.lst
+#    Object file                  =
+#        C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\4.5kW_GMI_DecStar\Obj\z_module_FlashRegisterCmd.o
+#    Runtime model:                  
+#      __SystemLibrary            =  DLib
+#      __dlib_full_locale_support =  1
+#      __dlib_version             =  6
+#
+###############################################################################
+
+C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\FlexMouse\UniversalProtocol\z_module_FlashRegisterCmd.c
+      1          /**
+      2            ***************************************************************************************************
+      3            * @file    module_FlashUpdateCmd.c 
+      4            * @author  Regal Pamela Lee
+      5            * @version V1.0
+      6            * @date    10-DEC-2020
+      7            * @brief   Decode and perform group 4 CMD
+      8            * @note    This App decode Group4 CMD in Universal protocol for all flash/setting update
+      9            *          Register mode   : Each parameter as a register and register number note in FlashOffsetIndex(Enum)
+     10            *          Flash Block mode: User should update the whole page of setting in a single/multi Page. 
+     11            *                            when transfer a page of setting will be divided into 32bytes per block
+     12            *                            always end with block0 (when receive block0 will finialize the whole update) 
+     13            *                            and can start with any other blockx, 
+     14            *                            @caution transfer must alsway contain the last block of the page for CRC  
+     15            ***************************************************************************************************
+     16            */
+     17          
+     18          #include "module_FlashRegisterCmd.h"
+     19          #include "zz_module_flash.h"
+     20          #include "driver_usart2.h"
+     21          #include "ab_module_Mc_StateMachine.h"
+     22          #include "pmsm_motor_parameters.h"
+     23          #include "mc_tasks.h"
+     24          #include "mc_type.h"
+     25          
+     26          extern ProcessInfo processInfoTable[];
+     27          
+     28          
+     29          Usart2_Control* usart2Control_FlashRegisterCmd;
+     30          
+     31          typedef enum                                                            //data request cmd list
+     32          {   //match universal protocol (group4)                                 //please assign according to the universal protocol document
+     33            SingleRegRd = 0x70,               //item0
+     34            SingleRegWr,                      //item1
+     35            SingleRegStatus,                  //item2
+     36            GroupRegRd,
+     37            GroupRegWr,
+     38          }FlashRegisterCMD;
+     39          
+     40          
+     41          
+     42          
+     43          /****************flash register local variable ********************************/
+     44          //#define flashBlockSize 32
+     45          //#define FLASH_PAGE_SIZE 0x800
+     46          #define FLASH_BLOCK_SETTING_PAGE ADDR_FLASH_PAGE_30
+     47          #define MIRROR_FLASH_BLOCK_SETTING_PAGE ADDR_FLASH_PAGE_31
+     48          
+     49          
+     50          
+     51          //uint64_t tt_FlashFrameTimeOut;                                //
+     52          //#define FlashFrameTimeOutValue 2000000                          //Time out value between the last block Flash frame to the next frame
+     53          /****************flash register local variable end*****************************/
+     54          
+     55          /************** periodic register value resent of motor data back to comBoard ***************************/
+     56          uint8_t ResendItems_bit = 0x00;                        //8 relatived register resend items, it's in bit mode bit0 = 1 => item0 is occupied .... bit7 = 1 => item7 is occupied
+     57          uint16_t RegReSend[] = {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF};    //each of the register number storage array
+     58          uint64_t tt_RegPerioidTime[]   = {0,0,0,0,0,0,0,0};  //real time relatived resend value 
+     59          uint16_t RegPerioidTimeValue[] = {0,0,0,0,0,0,0,0};  //time period of each resend items in ms
+     60          /**************************************************************************************************************************/
+     61          
+     62          typedef enum  
+     63          {
+     64              INIT_APP,
+     65              RUN_APP,
+     66              CMDreply,
+     67              // additional states to be added here as necessary.
+     68              IRQ_APP = DEFAULT_IRQ_STATE,
+     69              STOP_APP = KILL_APP
+     70          }AppStates;
+     71          
+     72          Module_StateMachineControl*  module_StateMachineControl_FlashRegisterCmd;
+     73          unsigned char* protocolBuf_FlashRegisterCmd ;
+     74          uint16_t ResendPeriod = 0;
+     75          uint16_t regNum =0xffff;
+     76            
+     77          uint8_t moduleFlashRegisterCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, uint8_t next_State_u8, uint8_t irq_id_u8)                
+     78          { 
+     79            AppStates   returnStage = INIT_APP;
+     80            switch (next_State_u8)
+     81              {
+     82                case INIT_APP:                                                              //initial stage
+     83                  {     
+     84                    /*Attach Uart2 shared memory into this App*/
+     85                    uint8_t Usart2index  = getProcessInfoIndex(MODULE_USART2);              //return Process index from processInfo array with the Uart2 driver
+     86                    usart2Control_FlashRegisterCmd = (Usart2_Control*) ((*(processInfoTable[Usart2index].Sched_ModuleData.p_masterSharedMem_u32)).p_ramBuf_u8);
+     87                    uint8_t Mc_StateMachineindex  = getProcessInfoIndex(MODULE_MC_STATEMACHINE);              //return Process index from processInfo array with the MC_statemachine module
+     88                    module_StateMachineControl_FlashRegisterCmd = (Module_StateMachineControl*) ((*(processInfoTable[Mc_StateMachineindex].Sched_ModuleData.p_masterSharedMem_u32)).p_ramBuf_u8);
+     89          
+     90                    returnStage = RUN_APP ;
+     91                    break;
+     92                  }       
+     93                case RUN_APP:
+     94                  { 
+     95                    unsigned int DataLen2 = (unsigned int)UniHeaderlen;
+     96                    if(RingBuf_GetUsedNumOfElements((*usart2Control_FlashRegisterCmd).seqMemRXG4L_u32) >= DataLen2 )
+     97                    { /** ------------------------------ pre-determine what state is in for Rx data is valid or not valid between blockmode transfer -------------------------**/
+     98                      if((protocolBuf_FlashRegisterCmd = (unsigned char*) realloc(protocolBuf_FlashRegisterCmd,DataLen2)) == NULL) reallocError++;     
+     99                      RingBuf_Observe((*usart2Control_FlashRegisterCmd).seqMemRXG4L_u32, protocolBuf_FlashRegisterCmd, 0, &DataLen2);  
+    100                      //calculate the total number of frame
+    101                      DataLen2 = ((unsigned int)protocolBuf_FlashRegisterCmd[1] & 0x3F) + (unsigned int)UniHeaderlen;
+    102                      if((protocolBuf_FlashRegisterCmd = (unsigned char*) realloc(protocolBuf_FlashRegisterCmd,DataLen2)) == NULL) reallocError++;     //allocate the right frame size of memory for buffer
+    103                      RingBuf_ReadBlock((*usart2Control_FlashRegisterCmd).seqMemRXG4L_u32, protocolBuf_FlashRegisterCmd, &DataLen2); //extract the whole fram
+    104                      /**---------------------------------------------- decode and perform the CMD function ------------------------------------------**/
+    105                      switch((FlashRegisterCMD)protocolBuf_FlashRegisterCmd[2])
+    106                      {
+    107                        case SingleRegRd: 
+    108                          { //Single Register read
+    109                            regNum = (((uint16_t)protocolBuf_FlashRegisterCmd[7])<< 8) +  protocolBuf_FlashRegisterCmd[8];
+    110                            if( ResendPeriod =(((uint16_t)protocolBuf_FlashRegisterCmd[5])<< 8) +  protocolBuf_FlashRegisterCmd[6])
+    111                            {              
+    112                              if( ResendPeriod == 1) 
+    113                                RegisterSend(regNum, RegisterRead(regNum));
+    114                              else
+    115                              { //setup reg resend command
+    116                                if(ResendItems_bit == 0xFF)
+    117                                { //register resend buffer full
+    118                                  unsigned char RegSendBufFul[] = {0x55, 0x01, 0x72, 0x00, 0x00, 0xE0, 0xCC, 0xCC}; //setting update seccuss, request for reboot
+    119                                  unsigned int TxLen = sizeof(RegSendBufFul);
+    120                                  RingBuf_WriteBlock((*usart2Control_FlashRegisterCmd).seqMemTX_u32, RegSendBufFul, &TxLen); 
+    121                                } 
+    122                                else
+    123                                { //check duplicate registr number already in buffer
+    124                                  uint8_t slotNum = 0;
+    125                                  for (; slotNum <= 7; slotNum++)
+    126                                  {
+    127                                    if(RegReSend[slotNum] == regNum)
+    128                                    {  //reNew the resend period
+    129                                       RegPerioidTimeValue[slotNum] = ResendPeriod;       //store register resend period in array      
+    130                                       break;
+    131                                    }
+    132                                  }
+    133                                  if(slotNum > 7)
+    134                                  { //find empty slot in Resend buffer
+    135                                    uint8_t tmpryShifter = 0x01;
+    136                                    for (slotNum = 0; slotNum <= 7; slotNum++)
+    137                                    {
+    138                                      if(!(ResendItems_bit & (tmpryShifter << slotNum))) //find empty slot
+    139                                      {
+    140                                        RegReSend[slotNum] = regNum;                       //store register number in array
+    141                                        RegPerioidTimeValue[slotNum] = ResendPeriod;       //store register resend period in array
+    142                                        ResendItems_bit |= (tmpryShifter << slotNum);
+    143                                        break;
+    144                                      }
+    145                                    }
+    146                                  }
+    147                                }                        
+    148                              }                    
+    149                            }
+    150                            else
+    151                            { //remove register read auto-resend 
+    152                              uint8_t slotNum = 0;
+    153                              for (; slotNum <= 7; slotNum++)
+    154                              { //search for the Register number in the list
+    155                                if(RegReSend[slotNum] == regNum)
+    156                                { //remove the resend from this slot
+    157                                  uint8_t tmpryShifter = 0x01;
+    158                                  RegReSend[slotNum] = 0xffff;
+    159                                  RegPerioidTimeValue[slotNum] = 0;
+    160                                  ResendItems_bit &= (~(tmpryShifter << slotNum));
+    161                                  break;
+    162                                } 
+    163                              }
+    164                              if(slotNum > 7)
+    165                              { //register number not in resend list
+    166                                  unsigned char RegNumNotInBuf[] = {0x55, 0x01, 0x72, 0x00, 0x00, 0xE1, 0xCC, 0xCC}; 
+    167                                  unsigned int TxLen = sizeof(RegNumNotInBuf);
+    168                                  RingBuf_WriteBlock((*usart2Control_FlashRegisterCmd).seqMemTX_u32, RegNumNotInBuf, &TxLen); 
+    169                                  break;
+    170                              } 
+    171                            }
+    172                            break;
+    173                          }
+    174                        case SingleRegWr: 
+    175                          { //Single Register write
+    176                            /*
+    177                            PerioidTimeValue[1] = (uint16_t)protocolBuf_FlashUpdateCmd[5] << 8;
+    178                            PerioidTimeValue[1] += protocolBuf_FlashUpdateCmd[6];
+    179                            if(PerioidTimeValue[1] > 1)
+    180                            {     // if not one off cmd will start to remember the next wakeup time
+    181                              tt_PerioidTime[1] = getSysCount() + PerioidTimeValue[1];                          //store time tick value
+    182                            } */         
+    183                            regNum = (((uint16_t)protocolBuf_FlashRegisterCmd[5])<< 8) +  protocolBuf_FlashRegisterCmd[6];
+    184                            uint16_t flashDat = (((uint16_t)protocolBuf_FlashRegisterCmd[7])<< 8) +  protocolBuf_FlashRegisterCmd[8];
+    185                            if(FlashDatSet(regNum, flashDat)) //store new flash write value in buffer first
+    186                            { //success store in flash buffer and update in ram
+    187                              /** @todo update in ram function**/
+    188                              //update in ram
+    189                            }
+    190                            if(IsFlashBufFull())
+    191                            { //temporary Flash write buffer is full, perform flash update
+    192                              unsigned char RegflashUpdate2Main[] = {0x55, 0x01, 0x72, 0x00, 0x00, 0x03, 0xCC, 0xCC}; 
+    193                              unsigned int TxLen = sizeof(RegflashUpdate2Main);
+    194                              RingBuf_WriteBlock((*usart2Control_FlashRegisterCmd).seqMemTX_u32, RegflashUpdate2Main, &TxLen); 
+    195                              /** @todo perform flash update**/
+    196                   //         uint8_t flashPageUpdate(uint8_t drv_id_u8, uint32_t _FrompageAddress, uint32_t _TopageAddress)
+    197                              
+    198                            }
+    199                                        
+    200                            break;
+    201                          }
+    202                        case SingleRegStatus: 
+    203                          { //Register status CMD
+    204                            /*
+    205                            PerioidTimeValue[2] = (uint16_t)protocolBuf_FlashUpdateCmd[5] << 8;
+    206                            PerioidTimeValue[2] += protocolBuf_FlashUpdateCmd[6];
+    207                            if(PerioidTimeValue[2] > 1)
+    208                            {     // if not one off cmd will start to remember the next wakeup time
+    209                              tt_PerioidTime[2] = getSysCount() + PerioidTimeValue[2];                          //store time tick value
+    210                            }*/
+    211                            break;
+    212                          }
+    213                        case GroupRegRd: 
+    214                          { //Register group  Read
+    215          
+    216                            break;
+    217                          }
+    218                        case GroupRegWr: 
+    219                          { //Register group  write
+    220          
+    221                            break;
+    222                          }
+    223                        default:
+    224                          break;
+    225                      }
+    226                    }
+    227                    else
+    228                    {
+    229          //pam tmpry            if(flashBlockWrDat.flashWrState != idle) flashBlkWriteStateMachine_Run(module_id_u8);  //still in block flash stateMachine 
+    230                    }
+    231                    returnStage = CMDreply;
+    232                    break;
+    233                  }
+    234                case CMDreply:
+    235                  {
+    236                    uint8_t CMDindex;
+    237                    for(CMDindex = 0; CMDindex < (sizeof(RegPerioidTimeValue)/sizeof(RegPerioidTimeValue[0])); CMDindex++)
+    238                    {
+    239                      uint8_t tmpryShifter = 0x01;
+    240                      if(((getSysCount() >= tt_RegPerioidTime[CMDindex]) && ( RegPerioidTimeValue[CMDindex] != 0)))
+    241                      {
+    242                          if(ResendItems_bit & (tmpryShifter << CMDindex))
+    243                          {  //current buffer ned send data
+    244                              RegisterSend(RegReSend[CMDindex], RegisterRead(RegReSend[CMDindex]));
+    245                              tt_RegPerioidTime[CMDindex] = getSysCount() + RegPerioidTimeValue[CMDindex]; 
+    246                              break;
+    247                          }
+    248                      }
+    249                    }
+    250                    returnStage = RUN_APP ;
+    251                    break;
+    252                  }
+    253                case IRQ_APP:
+    254                  {
+    255                    //if more than 1 driver interrupt attached to this APP
+    256          //           uint8_t index = getProcessInfoIndex(interruptIdentfer);         //return Process index from processInfo array of the driver interrupt call, APP can response respectively
+    257                    returnStage = RUN_APP;
+    258                    break;
+    259                  }               
+    260                case STOP_APP:
+    261                  {
+    262                    returnStage = INIT_APP;
+    263                    break;
+    264                  }
+    265                default:
+    266                  returnStage = STOP_APP;   
+    267              }
+    268            return returnStage;
+    269          }             
+    270          
+    271          uint16_t RegisterRead(uint16_t _registerNum)                   //read 16bit at the register
+    272          {
+    273            unsigned char* _pageAddress = (unsigned char*) FLASH_BLOCK_SETTING_PAGE;
+    274            return (FlashRead(_pageAddress, (_registerNum * 2))); 
+    275          }
+    276          
+    277          void RegisterSend(uint16_t _registerNumber, uint16_t _Data)
+    278          {
+    279            unsigned char RegSendDat[] = {0x55, 0x04, 0x70, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xCC, 0xCC};
+    280            uint32_t TxLen = sizeof(RegSendDat);
+    281            RegSendDat[5] = (unsigned char) ((_registerNumber & 0xff00) >> 8);
+    282            RegSendDat[6] = (unsigned char) _registerNumber & 0xff;
+    283            RegSendDat[7] = (unsigned char) ((_Data & 0xff00) >> 8);
+    284            RegSendDat[8] = (unsigned char) _Data & 0xff;
+    285            RingBuf_WriteBlock((*usart2Control_FlashRegisterCmd).seqMemTX_u32, RegSendDat, &TxLen); 
+    286          }
+    287                               
+    288          uint8_t Reg2Ram(uint32_t _RegNum)
+    289          {
+    290            switch((FlashOffsetIndex)_RegNum)
+    291            {
+    292              case Index_A_POLE_PAIR_NUM                :     //_1
+    293              case Index_A_RS                           :     //_ 
+    294              case Index_A_LS                           :     //_ 
+    295              case Index_A_NOMINAL_CURRENT              :     //_1
+    296              case Index_A_MAX_APPLICATION_SPEED_RPM    :     //_ 
+    297              case Index_A_MIN_APPLICATION_SPEED_RPM    :     //_ 
+    298              case Index_A_PLL_KP_GAIN                  :     //_1   MC_PROTOCOL_REG_PLL_KI,                /* 20  */
+    299              case Index_A_PLL_KI_GAIN                  :     //_1   MC_PROTOCOL_REG_PLL_KP,                /* 21  */
+    300              case Index_A_PWM_FREQUENCY                :     //_ 
+    301              case Index_A_PID_TORQUE_KP_DEFAULT        :     //_1
+    302              case Index_A_PID_TORQUE_KI_DEFAULT        :     //_1
+    303              case Index_A_PID_FLUX_KP_DEFAULT          :     //_1
+    304              case Index_A_PID_FLUX_KI_DEFAULT          :     //_1
+    305              case Index_A_PID_SPEED_KP_DEFAULT         :     //_1
+    306              case Index_A_PID_SPEED_KI_DEFAULT         :     //_1
+    307              case Index_A_IQMAX                        :     //_1
+    308              case Index_A_DEFAULT_CONTROL_MODE         :     //_1 MC_PROTOCOL_REG_CONTROL_MODE,          /* 3   */
+    309              case Index_A_OV_VOLTAGE_THRESHOLD_V       :     //_ 
+    310              case Index_A_UD_VOLTAGE_THRESHOLD_V       :     //_ 
+    311              case Index_A_OV_TEMPERATURE_THRESHOLD_C   :     //_ 
+    312              case Index_A_OV_TEMPERATURE_HYSTERESIS_C  :     //_ 
+    313              case Index_A_PHASE1_DURATION              :     //_1
+    314              case Index_A_PHASE1_FINAL_SPEED_UNIT      :     //_1
+    315              case Index_A_PHASE1_FINAL_CURRENT         :     //_1
+    316              case Index_A_PHASE2_DURATION              :     //_1
+    317              case Index_A_PHASE2_FINAL_SPEED_UNIT      :     //_1
+    318              case Index_A_PHASE2_FINAL_CURRENT         :     //_1
+    319              case Index_A_PHASE3_DURATION              :     //_1
+    320              case Index_A_PHASE3_FINAL_SPEED_UNIT      :     //_1
+    321              case Index_A_PHASE3_FINAL_CURRENT         :     //_1
+    322              case Index_A_PHASE4_DURATION              :     //_1
+    323              case Index_A_PHASE4_FINAL_SPEED_UNIT      :     //_1
+    324              case Index_A_PHASE4_FINAL_CURRENT         :     //_1
+    325              case Index_A_PHASE5_DURATION              :     //_1
+    326              case Index_A_PHASE5_FINAL_SPEED_UNIT      :     //_1
+    327              case Index_A_PHASE5_FINAL_CURRENT         :     //_1
+    328              case Index_A_TRANSITION_DURATION          :     //_1
+    329              // below are future configurable data    
+    330              case Index_D_HALL_SENSORS_PLACEMENT       :     //_1
+    331              case Index_D_HALL_PHASE_SHIFT             :     //_1
+    332              case Index_D_M1_ENCODER_PPR               :     //_ 
+    333          #if GAIN1 != 0   //pll or cord
+    334              case Index_A_GAIN1                        :     //_ 
+    335              case Index_A_GAIN2                        :     //_ 
+    336          #else
+    337              case Index_D_CORD_GAIN1                   :     //_ 
+    338              case Index_D_CORD_GAIN2                   :     //_ 
+    339              case Index_D_CORD_MAX_ACCEL_DPPP          :      //_1
+    340                break;
+    341          #endif //GAIN1   //pll or cord
+    342          
+    343          #ifdef _AB_MODULE_MC_STATEMACHINE_H_
+    344              case Index_MIN_COMMANDABLE_SPEED:
+    345                {
+    346                  break;
+    347                }
+    348              case Index_MAX_COMMANDABLE_SPEED:
+    349                {
+    350                  break;
+    351                }
+    352              case Index_SPEED_UP_RAMP_RATE:
+    353                {
+    354                  break;
+    355                }
+    356              case Index_SPEED_DOWN_RAMP_RATE:
+    357                {
+    358                  break;
+    359                }
+    360              case Index_SPEED_CONSIDERED_STOPPED: 
+    361                {
+    362                  break;
+    363                }
+    364              case Index_MotSpinTimeOut: 
+    365                {
+    366                  break;
+    367                }
+    368              case Index_SpinPollPeriod: 
+    369                {
+    370                  break;
+    371                }
+    372              case Index_numOfStartRetry: 
+    373                {
+    374                  break;
+    375                }
+    376              case Index_StartRetryPeriod: 
+    377                {
+    378                  break;
+    379                }
+    380              case Index_StartPeriodInc: 
+    381                {
+    382                  break;
+    383                }
+    384              case Index_over_current_threshold: 
+    385                {
+    386                  break;
+    387                }
+    388              case Index_over_current_rpm_Reduce: 
+    389                {
+    390                  break;
+    391                }
+    392              case Index_OvCurrent_derate_period: 
+    393                {
+    394                  break;
+    395                }
+    396              case Index_over_power_threshold: 
+    397                {
+    398                  break;
+    399                }
+    400              case Index_over_power_rpm_Reduce: 
+    401                {
+    402                  break;
+    403                }
+    404              case Index_OvPower_derate_period:
+    405                {
+    406                  break;
+    407                }
+    408              case Index_over_temperature_threshold:
+    409                {
+    410                  break;
+    411                }
+    412              case Index_over_temperature_rpm_Reduce: 
+    413                      {
+    414                  break;
+    415                }
+    416              case Index_OvTemp_derate_period: 
+    417                {
+    418                  break;
+    419                }
+    420          #endif //_MODULE_MC_STATEMACHINE_H_
+    421            default:
+    422              break;
+    423            }
+    424          }
+
+Errors: 19
+Warnings: 1
