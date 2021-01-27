@@ -1,0 +1,4 @@
+module_FlashUpateCmd.pbi: \
+  C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\FlexMouse\UniversalProtocol\module_FlashUpateCmd.c \
+  C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM/../Inc\pmsm_motor_parameters.h \
+  C:\work\GMI_SecondStage\4.5KW_GMI_460V_DecStar\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Drivers\driver_usart2.h
