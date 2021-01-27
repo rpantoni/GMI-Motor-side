@@ -16,7 +16,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "mc_tuning.h"
 
-#define CONTROLLED_BRAKING 1u
+#define CONTROLLED_BRAKING 1u // set to 0u if not using controlled braking
 #define REGAL_OTF 1u
 
 ////////////////////////////////////////////////////////////////////////////
@@ -48,9 +48,9 @@
 #define BYTE_SHIFT                      8                                  
 // RPa: the following hash defines are for the IMax trajectories to always be within the motor loss ellipse
 //      This has to be adapted for each motor class; for conservative setting: a=13, b=-6, c=1220
-#define RAMP_a          (int32_t) 13
-#define RAMP_b          (int32_t) -6
-#define RAMP_c          (int32_t) 1220
+#define RAMP_a          (int32_t) 13    //GMI: 17
+#define RAMP_b          (int32_t) -6   // GMI: -9
+#define RAMP_c          (int32_t) 1220 //GMI: 1285
 
 // RPa: Imax Control loop
 #define PID_IMAX_KP_DEFAULT          55

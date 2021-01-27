@@ -24,10 +24,10 @@ PID_Handle_t PIDBkHandle_M1 =
 {
   .hDefKpGain          = (int16_t)PID_BRAKE_KP_DEFAULT,
   .hDefKiGain          = (int16_t)PID_BRAKE_KI_DEFAULT,
-  .wUpperIntegralLimit = (int32_t)100 * (int32_t)BK_KIDIV,
-  .wLowerIntegralLimit = -(int32_t)100 * (int32_t)BK_KIDIV,
+  .wUpperIntegralLimit = (int32_t)100 * (int32_t)BK_KIDIV, //GMI 200
+  .wLowerIntegralLimit = -(int32_t)100 * (int32_t)BK_KIDIV, //GMI: -200
   .hUpperOutputLimit       = 0, //Rpa: a factor of the OVP, temp is for 60V
-  .hLowerOutputLimit       = -2000,//RPa: a factor of the UVP, temp is for 60V
+  .hLowerOutputLimit       = -2000,//RPa: a factor of the UVP, temp is for 60V, GMI -3000
   .hKpDivisor          = (uint16_t)BK_KPDIV,
   .hKiDivisor          = (uint16_t)BK_KIDIV,
   .hKpDivisorPOW2      = (uint16_t)BK_KPDIV_LOG,
@@ -65,9 +65,9 @@ Braking_Handle_t BrakeHandle_M1 =
 {
   .Nbar = 205,
   .BrakingPhase = STARTRAMP,
-  .IMax_Ref = 500,
+  .IMax_Ref = 500,// GMI: 2000
   .FeedForward_term = 0,
-  .Vbus_Add = 20,
+  .Vbus_Add = 20, //GMI: 60, Blender: 40.
 };
 
 
