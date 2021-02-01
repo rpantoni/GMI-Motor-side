@@ -57,6 +57,7 @@ typedef enum {
     MOTOR_START_RETRY_MODULE,
     FAULT_REPORT_MODULE,  
     FAULT_PROCESS_MODULE,
+    FAULT_WAIT_MODULE,
       
     // additional states to be added here as necessary.
     IRQ_MODULE = DEFAULT_IRQ_STATE,

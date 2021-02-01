@@ -32,7 +32,7 @@ Module_StateMachineControl  module_StateMachineControl;
 //__weak __no_init const uint16_t   MIN_COMMANDABLE_SPEED	       @(FLASH_USER_START_ADDR + (2 *  Index_MIN_COMMANDABLE_SPEED	   ) );
 __weak const uint16_t   MIN_COMMANDABLE_SPEED	     @(FLASH_USER_START_ADDR + (2 *  Index_MIN_COMMANDABLE_SPEED	) ) = 300       ;             
 __weak const uint16_t   MAX_COMMANDABLE_SPEED        @(FLASH_USER_START_ADDR + (2 *  Index_MAX_COMMANDABLE_SPEED        ) ) = 2500      ;             
-__weak const uint16_t   SPEED_UP_RAMP_RATE           @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_UP_RAMP_RATE           ) ) = 75        ;             
+__weak const uint16_t   SPEED_UP_RAMP_RATE           @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_UP_RAMP_RATE           ) ) = 200        ;             
 __weak const uint16_t   SPEED_DOWN_RAMP_RATE         @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_DOWN_RAMP_RATE         ) ) = 100       ;             
 __weak const uint16_t   SPEED_CONSIDERED_STOPPED     @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_CONSIDERED_STOPPED     ) ) = 200       ;             
 __weak const uint16_t   MotSpinTimeOut               @(FLASH_USER_START_ADDR + (2 *  Index_MotSpinTimeOut               ) ) = 4         ;             
@@ -96,6 +96,9 @@ uint64_t tt_derateTempPollTime;
        
 //RPa: Stop and Brake
 uint64_t tt_TurnOnLowSideTime;
+
+//RPa: OTF temporary fix
+uint64_t tt_FaultOTFWaitTime;
 
 
 /****************** local fault status ************************/
@@ -161,16 +164,16 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
           break;
         }
         case IDLE_MODULE: {
-            if(module_StateMachineControl.command_Speed != 0)
-            {
-              return_state_u8 = PRE_START_MODULE;
-              break;
-            }
-            StartRetryCounter = 0;                                                    //this variable combine with StartRetryPeriod to form the timeout of start retry
-            MotSpinPollCount = 0;                                                     //this value combine the startRetryTime delay to form the timeout 
-            return_state_u8 = IDLE_MODULE;
+          if(module_StateMachineControl.command_Speed != 0)
+          {
+            return_state_u8 = PRE_START_MODULE;
             break;
-        }
+          }
+        StartRetryCounter = 0;                                                    //this variable combine with StartRetryPeriod to form the timeout of start retry
+        MotSpinPollCount = 0;                                                     //this value combine the startRetryTime delay to form the timeout 
+        return_state_u8 = IDLE_MODULE;
+        break;
+    }
         case PRE_START_MODULE: {        //calculate the actual execution time according to the current motor speed and the target speed in RPM
             target_speed = module_StateMachineControl.command_Speed;
             setSpeed(module_StateMachineControl.command_Speed);                                                                 //Command ST motor libraries for running the speed of module_StateMachineControl.targetSpeed
@@ -346,10 +349,26 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
             break;
         }
         case FAULT_REPORT_MODULE: {
-            setupSoftwareIRQ(module_id_u8, MODULE_ERR_LOGHANDLE, 0xEF, GMI_FaultStatus, 0x00, NULL);                                       //Note: in FAULT_NOW situation will continue to issue fault to error-module 
-            return_state_u8 = IDLE_MODULE;
+            setupSoftwareIRQ(module_id_u8, MODULE_ERR_LOGHANDLE, 0xEF, GMI_FaultStatus, 0x00, NULL);  
+            tt_FaultOTFWaitTime = getSysCount() + 30000; //ST_Motor fault error persisting//Note: in FAULT_NOW situation will continue to issue fault to error-module 
+              return_state_u8 = FAULT_WAIT_MODULE;
             break;
-        }      
+        }
+        
+    case FAULT_WAIT_MODULE: {
+      
+      if (getSysCount()>=tt_FaultOTFWaitTime)
+      {
+        return_state_u8 = IDLE_MODULE;
+        break;
+      }
+      else
+      {
+        
+      }
+      return_state_u8 = FAULT_WAIT_MODULE;
+      break;
+    }
 
         //Motor stop
         case STOP_MOTOR_MODULE: {
