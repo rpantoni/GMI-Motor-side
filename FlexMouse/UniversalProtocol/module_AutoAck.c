@@ -11,6 +11,8 @@
 
 /* Includes --------------------------------------------------------------------------------------------------------------------*/
 #include "module_AutoAck.h"
+#include "mc_api.h"
+#include "ab_module_Mc_StateMachine.h"
 
 //#include "driver_usart2.h"
 
@@ -19,13 +21,18 @@
 extern ProcessInfo processInfoTable[];
 
 AutoAck_Control *autoAckControl;
+Module_StateMachineControl*  module_StateMachineControl_AutoAck;
 
 #define AckTimeOut 5000                        //Ack waiting timeout period
 uint64_t Ack_WaitTime; 
 
 uint8_t FrameAckID = 0;
+bool ValidRx = false;
 #define shifter 1
-  
+
+//******************************************************************************************
+static void LinkLost(void);
+
 //*****************************************************************************************
 typedef  struct 
 {
@@ -42,31 +49,35 @@ uint8_t Uni_NextFrameID = 0;                    //Unversal Ack frame ID (which t
 //********************************************************************************************************************************************************
 
 enum {
-  INIT_MODULE,
-  RUN_MODULE,
+  INIT_AUTOACK_MODULE,
+  RUN_AUTOACK_MODULE,
   // additional states to be added here as necessary.
-  IRQ_MODULE = DEFAULT_IRQ_STATE,
-  KILL_MODULE = KILL_APP
+  IRQ_AUTOACK_MODULE = DEFAULT_IRQ_STATE,
+  KILL_AUTOACK_MODULE = KILL_APP
 };
 
 
 
 
 uint8_t moduleAutoAck_u32(uint8_t drv_id_u8, uint8_t prev_state_u8, uint8_t next_state_u8, uint8_t irq_id_u8) {
-  uint8_t return_state_u8 = INIT_MODULE;
+  uint8_t return_state_u8 = INIT_AUTOACK_MODULE;
   switch (next_state_u8) {
-    case INIT_MODULE: {
+    case INIT_AUTOACK_MODULE: {
       // Initialize Auto Ackledgement ring 
       UniversalAckInit();
       
       AutoAckStructMem_u32 = StructMem_CreateInstance(MODULE_AUTOACK, sizeof(AutoAck_Control), ACCESS_MODE_WRITE_ONLY, NULL, EMPTY_LIST);//System call create a structured memory
       autoAckControl = (AutoAck_Control*)(*AutoAckStructMem_u32).p_ramBuf_u8;
       (*autoAckControl).RxAckFrameID = 0;
+      ValidRx = false;
       Ack_WaitTime = getSysCount() + AckTimeOut;                        //store time tick value  
-      return_state_u8 = RUN_MODULE;
+      uint8_t Mc_StateMachineindex  = getProcessInfoIndex(MODULE_MC_STATEMACHINE);              //return Process index from processInfo array with the MC_statemachine module
+      module_StateMachineControl_AutoAck = (Module_StateMachineControl*) ((*(processInfoTable[Mc_StateMachineindex].Sched_ModuleData.p_masterSharedMem_u32)).p_ramBuf_u8);
+      
+      return_state_u8 = RUN_AUTOACK_MODULE;
       break;
     }
-    case RUN_MODULE: {                                                  //        
+    case RUN_AUTOACK_MODULE: {                                                  //        
       if (getSysCount() >= Ack_WaitTime) 
       {
         AckFlushBuf();                                             //make sure the AckHead is pointing to the first Leading record
@@ -96,26 +107,36 @@ uint8_t moduleAutoAck_u32(uint8_t drv_id_u8, uint8_t prev_state_u8, uint8_t next
           AckDeRegistered(buf[Uni_AckHead].FrameAckID);                 //delete and free the first record from buffer          
         }    
         Ack_WaitTime = getSysCount() + AckTimeOut;                      //store time tick value  
+        
+        if (ValidRx != false)
+        {
+          ValidRx = false;         
+        }
+        else
+        {
+          LinkLost();
+        }
       }
       if((*autoAckControl).RxAckFrameID){
         AckDeRegistered((*autoAckControl).RxAckFrameID);                //got auto-ack receiver acknowledment, then de-registered this to fulfil the whole Auto-ack process
         (*autoAckControl).RxAckFrameID = 0;                             //clear the de-resister request
+        
       }
-      return_state_u8 = RUN_MODULE;
+      return_state_u8 = RUN_AUTOACK_MODULE;
       break;
     }
-    case KILL_MODULE: {
+    case KILL_AUTOACK_MODULE: {
       // The USART2 driver module must only be executed once.
       // Setting processStatus_u8 to PROCESS_STATUS_KILLED prevents the scheduler main loop from calling this module again.
       uint8_t table_index_u8 = getProcessInfoIndex(drv_id_u8);
       if (table_index_u8 != INDEX_NOT_FOUND) {
         processInfoTable[table_index_u8].Sched_DrvData.processStatus_u8 = PROCESS_STATUS_KILLED;
       }
-      return_state_u8 = KILL_MODULE;
+      return_state_u8 = KILL_AUTOACK_MODULE;
       break;
     }
     default: {
-      return_state_u8 = KILL_MODULE;
+      return_state_u8 = KILL_AUTOACK_MODULE;
       break;
     }
   }
@@ -207,3 +228,19 @@ uint8_t IsAckBufFull(void)
   return (false);
 }
 
+/* 
+RPa: do the necessary sequence when Communication link is lost
+*/
+static void LinkLost(void)
+{
+  // Add the necessary process when link is lost between app-side and motor-side
+  (*module_StateMachineControl_AutoAck).command_Speed = 0;
+}
+
+/*
+RPa: Setting the Valid received packet flag which is a private variable
+*/
+void Set_ValidRx(void)
+{
+  ValidRx = true;
+}

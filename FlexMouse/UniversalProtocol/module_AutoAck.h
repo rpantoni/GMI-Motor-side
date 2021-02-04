@@ -37,7 +37,10 @@ void UniversalAckInit(void);
 uint8_t AckDeRegistered(uint8_t FrameAckID);                     //Got the ack from the receiver and de-registered the record 
 uint8_t AckDatSet(uint8_t _AckCmd, uint16_t _E_AckCmd, uint8_t _ProcessAckID);
 uint8_t IsAckBufFull(void);
+void Set_ValidHeader(void);
 void AckFlushBuf(void);
+
+void Set_ValidRx(void);
 
 #ifdef __cplusplus
 }

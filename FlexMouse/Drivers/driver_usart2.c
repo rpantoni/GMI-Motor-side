@@ -26,7 +26,6 @@ AutoAck_Control *autoAckControl_u32;
 
 __IO ITStatus UartReady = RESET;
 uint8_t usart2CaptureLen;                     //default Universal Protocol header length
-//uint8_t counter = 0;
 uint16_t uwCRCValue = 0;
 
 /**
@@ -216,6 +215,7 @@ void protocolHeaderfetch(void)
         uint8_t dataA ;
         uint8_t headerCRCLen = 7;                                               //default normal frame header + CRC bytes = 7 byte
         uint8_t dataC = (uint8_t) headerBuf[1] & 0xC0;
+        
         if (dataC == 0)                                                         //check this is advanced frame [00]+[data length]
         {
           dataA = (uint8_t)headerBuf[4] & 0xf0 ;                                //this is normal frame, store dataA as the expected Header-end in byte 5
@@ -281,6 +281,9 @@ void protocolHeaderfetch(void)
             unsigned int TxLen = sizeof(ackTx);
             RingBuf_WriteBlock((*usart2Control).seqMemTX_u32, ackTx, &TxLen); 
           }          
+          // RPa: to signal that there is valid packet
+          Set_ValidRx();
+          
           switch(protocolBuf[2] & 0xf0)
           {     //groups decoding  please refer to the document of Universal protocol 
             case 0x00:          //group 1

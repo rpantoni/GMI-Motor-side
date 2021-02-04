@@ -29,11 +29,12 @@ typedef enum                                                            //data r
   MotDir = 0x42,               //item3
   MotEE = 0x4F,                 //item4
   MotThermMech = 0x6F,           //item5
-  MotTorque                     //item6
+  MotTorque = 0x61,                     //item6
+  HeartBeat = 0x4E,                    //item7
 }ReplyCMD;
-         //         item       0  1  2    3    4    5   6          -- as the valuable will match in the same way for the enum command list above
-uint64_t tt_PerioidTime[]   = {0, 0, 0,   0,   0,   0,  0};                                //please declare total numbers of items in enum, for example three zero with 3 command in enum
-uint16_t PerioidTimeValue[] = {0, 0, 0,   0, 1000, 0,   0};      ///please declare total numbers of items in enum, for example three zero with 3 
+         //         item       0  1  2    3    4    5   6   7         -- as the valuable will match in the same way for the enum command list above
+uint64_t tt_PerioidTime[]   = {0, 0, 0,   0,   0,   0,  0,  0};                                //please declare total numbers of items in enum, for example three zero with 3 command in enum
+uint16_t PerioidTimeValue[] = {0, 0, 0,   0, 1000, 0,   0,  2000};      ///please declare total numbers of items in enum, for example three zero with 3 
                                                  ///command in enum,you can put the default reply period in the relative item, then it will report data automatically.
                                                  /// for example item2 is Measured-speed will send back every 1000mS
 /**************************************************************************************************************************/
@@ -149,6 +150,16 @@ uint8_t moduleReplyCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, uint8_t 
                   }
                   break;   
                 }
+             case HeartBeat: // point to tt_PerioidTime[6] and PerioidTimeValue[6]
+                { //estimated temperature request
+                  PerioidTimeValue[7] = (uint16_t)protocolBuf_ReplyCmd[5] << 8;
+                  PerioidTimeValue[7] += protocolBuf_ReplyCmd[6];
+                  if(PerioidTimeValue[7] > 1)
+                  {     // if not one off cmd will start to remember the next wakeup time
+                    tt_PerioidTime[7] = getSysCount() + PerioidTimeValue[7];                          //store time tick value
+                  }
+                  break;   
+                }                
               default:
                 break;
             }
@@ -245,7 +256,14 @@ uint8_t moduleReplyCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, uint8_t 
                     TorqueTx[6] = (unsigned char) Torque & 0xff;  
                     RingBuf_WriteBlock((*usart2Control_ReplyCmd).seqMemTX_u32, TorqueTx, &TxLen); 
                     break;
-                  }                  
+                  } 
+                 case 7:
+                  { //HeartBeat Request     
+                    unsigned char HeartBeatTx[] = {0x55, 0x04, 0x4E, 0x5A, 0xA5, 0xff, 0xff, 0xCC, 0xCC};// Just send 0x5AA5 to App-side and get a response
+                    TxLen = sizeof(HeartBeatTx);
+                    RingBuf_WriteBlock((*usart2Control_ReplyCmd).seqMemTX_u32, HeartBeatTx, &TxLen); 
+                    break;
+                  }                   
                 default:
                     break;
               }  
