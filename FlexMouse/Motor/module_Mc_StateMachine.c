@@ -416,11 +416,15 @@ void setSpeed(int32_t target_speed){
   MC_ProgramSpeedRampMotor1( target_speed / 6, speed_ramp_up_duration );    
 }
 
-uint8_t AvrCurrentIndx = 1;
+uint8_t AvrCurrentIndx = 0;
 void updateAvrCurrent(void){            //average current for fault monitor 
   qd_t Iqd = pMPM[M1]->pFOCVars->Iqd;
-  avrCurrentRd[AvrCurrentIndx++ & 0x03] = ( int32_t )(sqrt(( int32_t )Iqd.q ^2 + ( int32_t )Iqd.d ^2));
-  if(AvrCurrentIndx == 0) avrCurrentRdOP = (avrCurrentRd[0] + avrCurrentRd[1] + avrCurrentRd[2] + avrCurrentRd[3])/4;
+  avrCurrentRd[AvrCurrentIndx] = ( int32_t )(sqrt((( int32_t )Iqd.q * (int32_t) Iqd.q)+ (( int32_t )Iqd.d * (int32_t) Iqd.d)));
+  AvrCurrentIndx++;
+  if(AvrCurrentIndx == 4) {
+    avrCurrentRdOP = abs((avrCurrentRd[0] + avrCurrentRd[1] + avrCurrentRd[2] + avrCurrentRd[3])/4);
+    AvrCurrentIndx = 0;
+  }
 }
 
 ModuleMotorStates deratingCheck(void){
