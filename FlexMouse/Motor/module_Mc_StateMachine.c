@@ -31,7 +31,7 @@ Module_StateMachineControl  module_StateMachineControl;
 /************************************ All the setting should be mapped into FLash *********************************************/
 //__weak __no_init const uint16_t   MIN_COMMANDABLE_SPEED	       @(FLASH_USER_START_ADDR + (2 *  Index_MIN_COMMANDABLE_SPEED	   ) );
 __weak const uint16_t   MIN_COMMANDABLE_SPEED	     @(FLASH_USER_START_ADDR + (2 *  Index_MIN_COMMANDABLE_SPEED	) ) = 300       ;             
-__weak const uint16_t   MAX_COMMANDABLE_SPEED        @(FLASH_USER_START_ADDR + (2 *  Index_MAX_COMMANDABLE_SPEED        ) ) = 2500      ;             
+__weak const uint16_t   MAX_COMMANDABLE_SPEED        @(FLASH_USER_START_ADDR + (2 *  Index_MAX_COMMANDABLE_SPEED        ) ) = 2000      ;             
 __weak const uint16_t   SPEED_UP_RAMP_RATE           @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_UP_RAMP_RATE           ) ) = 200        ;             
 __weak const uint16_t   SPEED_DOWN_RAMP_RATE         @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_DOWN_RAMP_RATE         ) ) = 100       ;             
 __weak const uint16_t   SPEED_CONSIDERED_STOPPED     @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_CONSIDERED_STOPPED     ) ) = 200       ;             
@@ -48,7 +48,7 @@ __weak const uint16_t   over_power_rpm_Reduce        @(FLASH_USER_START_ADDR + (
 __weak const uint16_t   OvPower_derate_period        @(FLASH_USER_START_ADDR + (2 *  Index_OvPower_derate_period        ) ) = 200       ;             
 __weak const uint16_t   over_temperature_threshold   @(FLASH_USER_START_ADDR + (2 *  Index_over_temperature_threshold   ) ) = 33        ;             
 __weak const uint16_t   over_temperature_rpm_Reduce  @(FLASH_USER_START_ADDR + (2 *  Index_over_temperature_rpm_Reduce  ) ) = 10        ;             
-__weak const uint16_t   OvTemp_derate_period         @(FLASH_USER_START_ADDR + (2 *  Index_OvTemp_derate_period         ) ) = 30000     ;      
+__weak const uint16_t   OvTemp_derate_period         @(FLASH_USER_START_ADDR + (2 *  Index_OvTemp_derate_period         ) ) = 30000     ;     
 
 
 // Application Constants
@@ -60,7 +60,7 @@ __weak const uint16_t   OvTemp_derate_period         @(FLASH_USER_START_ADDR + (
 //#define SPEED_CONSIDERED_STOPPED	200		// RPM              
 
 int32_t target_speed = 0;                               //Actural speed to submit into ST motor libaries                        
-
+int16_t act_dir = 1;
 /************************ Motor start spinning timing parameter  ********************************************************/
 static uint16_t MotSpinPollCount = 0;
 //#define MotSpinTimeOut 4                        //max motor spin poll count for time out measurement
@@ -139,8 +139,9 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
           } 
         }
         else {  
-          if(module_StateMachineControl.command_Speed < MIN_COMMANDABLE_SPEED) module_StateMachineControl.command_Speed = MIN_COMMANDABLE_SPEED;            //check command speed lower than min speed
-          if(module_StateMachineControl.command_Speed > MAX_COMMANDABLE_SPEED) module_StateMachineControl.command_Speed = MAX_COMMANDABLE_SPEED;            //check command speed lower than min speed       
+          //RPa: direction commands 
+            if(module_StateMachineControl.command_Speed < MIN_COMMANDABLE_SPEED) module_StateMachineControl.command_Speed = MIN_COMMANDABLE_SPEED; 
+            if(module_StateMachineControl.command_Speed > MAX_COMMANDABLE_SPEED) module_StateMachineControl.command_Speed = MAX_COMMANDABLE_SPEED;  
         }
     }
     module_StateMachineControl.current_State = (ModuleMotorStates)next_State_u8;
@@ -158,7 +159,9 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
             /*** check the motor setting and init all motor setting ***/            
             module_StateMachineControl.command_Speed = 0;            
             module_StateMachineControl.errorCode_u8 = 0;
+            module_StateMachineControl.motorDir = 1; //CW
             module_StateMachineControl.motorEnable = TRUE;
+            
             //init motor flag
             return_state_u8 = IDLE_MODULE;
           break;
@@ -176,8 +179,9 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
     }
         case PRE_START_MODULE: {        //calculate the actual execution time according to the current motor speed and the target speed in RPM
             target_speed = module_StateMachineControl.command_Speed;
-            setSpeed(module_StateMachineControl.command_Speed);                                                                 //Command ST motor libraries for running the speed of module_StateMachineControl.targetSpeed
+            setSpeed(module_StateMachineControl.command_Speed * (int32_t) module_StateMachineControl.motorDir);                                                                 //Command ST motor libraries for running the speed of module_StateMachineControl.targetSpeed
             MC_StartMotor1();
+            act_dir = MC_GetImposedDirectionMotor1();
             MotSpinPollCount = 0;                                                                                               //Reset motor spinning loop count as timeout counter
             tt_SpinPollTime = getSysCount() + SpinPollPeriod;                                                                   //prepare next time tick value for OTF_STARTUP_MODULE
             return_state_u8 = OTF_STARTUP_MODULE;
@@ -207,9 +211,9 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
               tt_SpinPollTime = getSysCount() + SpinPollPeriod;                          //update next time tick value 
             }
             if((tmpryMC_State == START_RUN) || ( tmpryMC_State == RUN)){                                              //ST motor libries in correct state?
-                if(abs((MC_GetMecSpeedAverageMotor1() * 6) - target_speed) <= ((target_speed *8)/10)) {                 //check motor actual running at more than +-20% of target speed
+                if(abs((MC_GetMecSpeedAverageMotor1() * 6 * act_dir) - target_speed) <= ((abs(target_speed) *8)/10)) {                 //check motor actual running at more than +-20% of target speed
                   MotSpinPollCount = 0;    
-                  StartRetryCounter = 0;    
+                  StartRetryCounter = 0;   
                   return_state_u8 = MOTOR_RUNNING_MODULE;
                   break;   
                 }   
@@ -241,83 +245,162 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
             break;   
           }   */
           //if can run to this line means no de-rating happen, then will update the new speed 
-          if(target_speed != module_StateMachineControl.command_Speed){
-            target_speed = module_StateMachineControl.command_Speed;
-            setSpeed(module_StateMachineControl.command_Speed);      
+          if(target_speed != module_StateMachineControl.command_Speed){           
+            if (module_StateMachineControl.motorDir == act_dir)//collinear
+            {
+              target_speed = module_StateMachineControl.command_Speed;
+              setSpeed(module_StateMachineControl.command_Speed * (int32_t) act_dir);   
+            }
+            else
+            {
+              module_StateMachineControl.command_Speed = 0;
+              return_state_u8 = STOP_MOTOR_MODULE;
+            }            
           } 
           break;
         }
         
         
         //derating feature/s will use the higher priority one to follow (over-temperature, over-current, or fire-mode)
-        case CURRENT_DERATING_MODULE: { 
-          uint32_t tmpryDrate = -(uint32_t)over_current_rpm_Reduce;
-          return_state_u8 = CURRENT_DERATING_MODULE;
-          if (target_speed > module_StateMachineControl.command_Speed)
+    case CURRENT_DERATING_MODULE: { 
+      uint32_t tmpryDrate = -(uint32_t)over_current_rpm_Reduce;
+      return_state_u8 = CURRENT_DERATING_MODULE;
+      if (target_speed > module_StateMachineControl.command_Speed)
+      {
+        if (module_StateMachineControl.motorDir == act_dir)//collinear
+        {
+          target_speed = module_StateMachineControl.command_Speed;
+          setSpeed(module_StateMachineControl.command_Speed * (int32_t) act_dir);   
+        }
+        else
+        {
+          module_StateMachineControl.command_Speed = 0;
+          return_state_u8 = STOP_MOTOR_MODULE;
+        }   
+      }
+      
+      if(deratingCheck() != CURRENT_DERATING_MODULE){                                                   //check the same de-rating is presist 
+        if( target_speed < module_StateMachineControl.command_Speed) tmpryDrate = -tmpryDrate;               //increase speed after de_rate condition over
+        else {
+          if (module_StateMachineControl.motorDir == act_dir)//collinear
           {
             target_speed = module_StateMachineControl.command_Speed;
+            setSpeed(module_StateMachineControl.command_Speed * (int32_t) act_dir);  
+            return_state_u8 = MOTOR_RUNNING_MODULE;
           }
-          
-          if(deratingCheck() != CURRENT_DERATING_MODULE){                                                   //check the same de-rating is presist 
-              if( target_speed < module_StateMachineControl.command_Speed) tmpryDrate = -tmpryDrate;               //increase speed after de_rate condition over
-              else {
-                target_speed = module_StateMachineControl.command_Speed;                                             //after speed get back to command then jump out
-                return_state_u8 = MOTOR_RUNNING_MODULE;
-              }
-          }
-          if (getSysCount() >= tt_derateCurrentPollTime) {                                                    //wait for motor spin down to reach the lower threshold
-            target_speed += tmpryDrate;                                                                         //reduce the speed 
-            setSpeed(target_speed);                                                                           //Command ST motor libraries for running the speed of target_speed
-            tt_derateCurrentPollTime = getSysCount() + OvCurrent_derate_period;                             //prepare next time tick value for CURRENT_DERATING_MODULE 
-          }
-          break;
+          else
+          {
+            module_StateMachineControl.command_Speed = 0;
+            return_state_u8 = STOP_MOTOR_MODULE;
+          }                                             //after speed get back to command then jump out       
         }
-        //derating feature/s will use the higher priority one to follow (over-temperature, over-current, or fire-mode)
-        case POWER_DERATING_MODULE: { 
-          uint32_t tmpryDrate = -(uint32_t)over_power_rpm_Reduce;
-          return_state_u8 = POWER_DERATING_MODULE;
-          if (target_speed > module_StateMachineControl.command_Speed)
+      }
+      if (getSysCount() >= tt_derateCurrentPollTime) {                                                    //wait for motor spin down to reach the lower threshold
+        target_speed += tmpryDrate;                                                                         //reduce the speed 
+        if (target_speed < MIN_COMMANDABLE_SPEED)
+        {
+          module_StateMachineControl.command_Speed = 0;   
+          return_state_u8 = STOP_MOTOR_MODULE;// Stop the motor and go back to IDLE
+        }            
+        setSpeed(target_speed * (int32_t) act_dir);                                                                           //Command ST motor libraries for running the speed of target_speed
+        tt_derateCurrentPollTime = getSysCount() + OvCurrent_derate_period;                             //prepare next time tick value for CURRENT_DERATING_MODULE 
+      }
+      break;
+    }
+    //derating feature/s will use the higher priority one to follow (over-temperature, over-current, or fire-mode)
+    case POWER_DERATING_MODULE: { 
+      uint32_t tmpryDrate = -(uint32_t)over_power_rpm_Reduce;
+      return_state_u8 = POWER_DERATING_MODULE;
+      if (target_speed > module_StateMachineControl.command_Speed)
+      {
+        if (module_StateMachineControl.motorDir == act_dir)//collinear
+        {
+          target_speed = module_StateMachineControl.command_Speed;
+          setSpeed(module_StateMachineControl.command_Speed * (int32_t) act_dir);   
+        }
+        else
+        {
+          module_StateMachineControl.command_Speed = 0;
+          return_state_u8 = STOP_MOTOR_MODULE;
+        }   
+      }
+      
+      if(deratingCheck() != POWER_DERATING_MODULE){                                                     //check the same de-rating is presist 
+        if( target_speed < module_StateMachineControl.command_Speed) tmpryDrate = -tmpryDrate;               //increase speed after de_rate condition over
+        else {
+          if (module_StateMachineControl.motorDir == act_dir)//collinear
           {
             target_speed = module_StateMachineControl.command_Speed;
+            setSpeed(module_StateMachineControl.command_Speed * (int32_t) act_dir);  
+            return_state_u8 = MOTOR_RUNNING_MODULE;
           }
+          else
+          {
+            module_StateMachineControl.command_Speed = 0;
+            return_state_u8 = STOP_MOTOR_MODULE;
+          }                                             //after speed get back to command then jump out
           
-          if(deratingCheck() != POWER_DERATING_MODULE){                                                     //check the same de-rating is presist 
-              if( target_speed < module_StateMachineControl.command_Speed) tmpryDrate = -tmpryDrate;               //increase speed after de_rate condition over
-              else {
-                target_speed = module_StateMachineControl.command_Speed;                                             //after speed get back to command then jump out
-                return_state_u8 = MOTOR_RUNNING_MODULE;
-              }
-          }
-          if (getSysCount() >= tt_deratePowerPollTime) {                                                        //wait for motor spin down to reach the lower threshold  
-            target_speed += tmpryDrate;                                                                         //reduce the speed 
-            setSpeed(target_speed);    
-            tt_deratePowerPollTime = getSysCount() + OvPower_derate_period;                                     //prepare next time tick value for POWER_DERATING_MODULE
-          }
-          break;
         }
-        //derating feature/s will use the higher priority one to follow (over-temperature, over-current, or fire-mode)
-        case TEMPERATURE_DERATING_MODULE: {  
-          uint32_t tmpryDrate = -(uint32_t)over_temperature_rpm_Reduce;
-          return_state_u8 = TEMPERATURE_DERATING_MODULE;
-          if (target_speed > module_StateMachineControl.command_Speed)
+      }
+      if (getSysCount() >= tt_deratePowerPollTime) {                                                        //wait for motor spin down to reach the lower threshold  
+        target_speed += tmpryDrate;                                                                         //reduce the speed 
+        if (target_speed < MIN_COMMANDABLE_SPEED)
+        {
+          module_StateMachineControl.command_Speed = 0;   
+          return_state_u8 = STOP_MOTOR_MODULE;// Stop the motor and go back to IDLE
+        }
+        setSpeed(target_speed * (int32_t) act_dir);    
+        tt_deratePowerPollTime = getSysCount() + OvPower_derate_period;                                     //prepare next time tick value for POWER_DERATING_MODULE
+      }
+      break;
+    }
+    //derating feature/s will use the higher priority one to follow (over-temperature, over-current, or fire-mode)
+    case TEMPERATURE_DERATING_MODULE: {  
+      uint32_t tmpryDrate = -(uint32_t)over_temperature_rpm_Reduce;
+      return_state_u8 = TEMPERATURE_DERATING_MODULE;
+      if ((target_speed > module_StateMachineControl.command_Speed))
+      {
+        if(module_StateMachineControl.motorDir == act_dir)
+        {
+          target_speed = module_StateMachineControl.command_Speed;
+          setSpeed(module_StateMachineControl.command_Speed * (int32_t) act_dir); 
+        }
+        else
+        {
+          module_StateMachineControl.command_Speed = 0;
+          return_state_u8 = STOP_MOTOR_MODULE;
+        } 
+      }
+      
+      if(deratingCheck() != TEMPERATURE_DERATING_MODULE) {                                                     //check the same de-rating is presist 
+        if( target_speed < module_StateMachineControl.command_Speed) tmpryDrate = -tmpryDrate;               //increase speed after de_rate condition over
+        else {
+          if (module_StateMachineControl.motorDir == act_dir)//collinear
           {
             target_speed = module_StateMachineControl.command_Speed;
+            setSpeed(module_StateMachineControl.command_Speed * (int32_t) act_dir); 
+            return_state_u8 = MOTOR_RUNNING_MODULE;
           }
+          else
+          {
+            module_StateMachineControl.command_Speed = 0;
+            return_state_u8 = STOP_MOTOR_MODULE;
+          }                                         //after speed get back to command then jump out
           
-          if(deratingCheck() != TEMPERATURE_DERATING_MODULE) {                                                     //check the same de-rating is presist 
-              if( target_speed < module_StateMachineControl.command_Speed) tmpryDrate = -tmpryDrate;               //increase speed after de_rate condition over
-              else {
-                target_speed = module_StateMachineControl.command_Speed;                                             //after speed get back to command then jump out
-                return_state_u8 = MOTOR_RUNNING_MODULE;
-              }
-          }
-          if (getSysCount() >= tt_derateTempPollTime) {                                                         //wait for motor spin down to reach the lower threshold           
-            target_speed += tmpryDrate;                                                                         //reduce the speed 
-            setSpeed(target_speed);   
-            tt_derateTempPollTime = getSysCount() + OvTemp_derate_period;                                     //prepare next time tick value for TEMPATURE_DERATING_MODULE  ;    
-          }          
-          break;
         }
+      }
+      if (getSysCount() >= tt_derateTempPollTime) {                                                         //wait for motor spin down to reach the lower threshold           
+        target_speed += tmpryDrate;                                                                         //reduce the speed 
+        if ((target_speed < MIN_COMMANDABLE_SPEED))
+        {
+          module_StateMachineControl.command_Speed = 0;   
+          return_state_u8 = STOP_MOTOR_MODULE;// Stop the motor and go back to IDLE
+        }
+        setSpeed(target_speed * (int32_t) act_dir);   
+        tt_derateTempPollTime = getSysCount() + OvTemp_derate_period;                                     //prepare next time tick value for TEMPATURE_DERATING_MODULE  ;    
+      }          
+      break;
+    }
         
         //Error retry handling
         case MOTOR_START_RETRY_MODULE: {
@@ -369,31 +452,41 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
       return_state_u8 = FAULT_WAIT_MODULE;
       break;
     }
-
-        //Motor stop
-        case STOP_MOTOR_MODULE: {
-          //check motor current situation to perform motor stop sequency
-          MC_StopMotor1();
-          return_state_u8 = MOTOR_STOPPING_MODULE;
-            break;
-        }
-        case MOTOR_STOPPING_MODULE: {
-            if (BrakeHandle_M1.BrakingPhase == STARTRAMP)
-            {
-              tt_TurnOnLowSideTime = getSysCount() + 50;
-              return_state_u8 = MOTOR_BRAKING_MODULE;
-            }            
-            return_state_u8 = MOTOR_BRAKING_MODULE;
-            break;
-        }
-        case MOTOR_BRAKING_MODULE: {
-          if (getSysCount()>= tt_TurnOnLowSideTime)
-          {
-            return_state_u8 = IDLE_MODULE;
-          }
-            break; 
-        }             
-            
+    
+    //Motor stop
+    case STOP_MOTOR_MODULE: {
+      //check motor current situation to perform motor stop sequency
+      MC_StopMotor1();
+      return_state_u8 = MOTOR_STOPPING_MODULE;
+      break;
+    }
+    case MOTOR_STOPPING_MODULE: {
+      if (BrakeHandle_M1.BrakingPhase == STARTRAMP)
+      {
+        tt_TurnOnLowSideTime = getSysCount() + 2000;
+        return_state_u8 = MOTOR_BRAKING_MODULE;
+        break;
+      }   
+      else{
+        return_state_u8 = MOTOR_STOPPING_MODULE;
+        break;
+      }
+      
+      break;
+    }
+    case MOTOR_BRAKING_MODULE: {
+      if (getSysCount()>= tt_TurnOnLowSideTime)
+      {
+        return_state_u8 = IDLE_MODULE;
+        break;
+      }
+      else{
+        return_state_u8 = MOTOR_BRAKING_MODULE;
+        break;
+      }
+      break; 
+    }             
+    
         case IRQ_MODULE: {
             return_state_u8 = IDLE_MODULE;
             break;

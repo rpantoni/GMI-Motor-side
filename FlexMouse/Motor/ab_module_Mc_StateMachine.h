@@ -80,6 +80,7 @@ typedef struct {
     ModuleMotorStates current_State;                     //read only      //Motor control state machine is currenly in what state 
     uint8_t motorEnable;
     uint8_t errorCode_u8;
+    int8_t motorDir;                                   //write only, commanded direction coming from the app-side
 } Module_StateMachineControl;
 
 void setSpeed(int32_t target_speed);

@@ -14,6 +14,7 @@
 #include "driver_usart2.h"
 #include "ab_module_Mc_StateMachine.h"
 
+
 extern uint64_t getSysCount(void);
 /* SysCon handle declaration */
 extern ProcessInfo processInfoTable[];
@@ -89,6 +90,12 @@ uint8_t moduleShortCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, uint8_t 
                   int32_t speed_target = protocolBuf_ShortCmd[6];
                   speed_target += (int16_t) protocolBuf_ShortCmd[5] << 8;
                   (*module_StateMachineControl_ShortCmd).command_Speed = speed_target;
+                  
+                  uint8_t dir_target = (uint8_t) protocolBuf_ShortCmd[7];
+                  
+                  if (dir_target == 6)(*module_StateMachineControl_ShortCmd).motorDir = 1;
+                  if (dir_target == 9) (*module_StateMachineControl_ShortCmd).motorDir = -1;
+                  
                   break;
                 }
               default:
