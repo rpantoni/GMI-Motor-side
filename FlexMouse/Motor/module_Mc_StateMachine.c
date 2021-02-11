@@ -36,7 +36,7 @@ __weak const uint16_t   SPEED_UP_RAMP_RATE           @(FLASH_USER_START_ADDR + (
 __weak const uint16_t   SPEED_DOWN_RAMP_RATE         @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_DOWN_RAMP_RATE         ) ) = 100       ;             
 __weak const uint16_t   SPEED_CONSIDERED_STOPPED     @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_CONSIDERED_STOPPED     ) ) = 200       ;             
 __weak const uint16_t   MotSpinTimeOut               @(FLASH_USER_START_ADDR + (2 *  Index_MotSpinTimeOut               ) ) = 4         ;             
-__weak const uint16_t   SpinPollPeriod               @(FLASH_USER_START_ADDR + (2 *  Index_SpinPollPeriod               ) ) = 1000      ;             
+__weak const uint16_t   SpinPollPeriod               @(FLASH_USER_START_ADDR + (2 *  Index_SpinPollPeriod               ) ) = 5000      ;             
 __weak const uint16_t   numOfStartRetry              @(FLASH_USER_START_ADDR + (2 *  Index_numOfStartRetry              ) ) = 6         ;             
 __weak const uint16_t   StartRetryPeriod             @(FLASH_USER_START_ADDR + (2 *  Index_StartRetryPeriod             ) ) = 2000      ;             
 __weak const uint16_t   StartPeriodInc               @(FLASH_USER_START_ADDR + (2 *  Index_StartPeriodInc               ) ) = 10000     ;             
@@ -245,18 +245,19 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
             break;   
           }   */
           //if can run to this line means no de-rating happen, then will update the new speed 
-          if(target_speed != module_StateMachineControl.command_Speed){           
-            if (module_StateMachineControl.motorDir == act_dir)//collinear
-            {
+          if (module_StateMachineControl.motorDir != act_dir)
+          {
+            module_StateMachineControl.command_Speed = 0;
+            return_state_u8 = STOP_MOTOR_MODULE;           
+          }
+          else
+          {
+            if(target_speed != module_StateMachineControl.command_Speed){   
+              
               target_speed = module_StateMachineControl.command_Speed;
               setSpeed(module_StateMachineControl.command_Speed * (int32_t) act_dir);   
             }
-            else
-            {
-              module_StateMachineControl.command_Speed = 0;
-              return_state_u8 = STOP_MOTOR_MODULE;
-            }            
-          } 
+          }
           break;
         }
         
