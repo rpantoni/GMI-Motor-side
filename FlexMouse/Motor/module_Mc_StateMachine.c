@@ -182,6 +182,21 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
             setSpeed(module_StateMachineControl.command_Speed * (int32_t) module_StateMachineControl.motorDir);                                                                 //Command ST motor libraries for running the speed of module_StateMachineControl.targetSpeed
             MC_StartMotor1();
             act_dir = MC_GetImposedDirectionMotor1();
+            // Temporary integrator limits to avoid regen when decelerating, a dc bus control method will be implemented soon
+            if (act_dir == 1)
+            {
+              PIDSpeedHandle_M1.hLowerOutputLimit=0;
+              PIDSpeedHandle_M1.wLowerIntegralLimit=0;
+              PIDSpeedHandle_M1.wUpperIntegralLimit = (int32_t)A_IQMAX * (int32_t)SP_KIDIV;
+              PIDSpeedHandle_M1.hUpperOutputLimit = (int16_t)A_IQMAX;              
+            }
+            else if (act_dir == -1)
+            {
+              PIDSpeedHandle_M1.hUpperOutputLimit=0;
+              PIDSpeedHandle_M1.wUpperIntegralLimit=0;          
+              PIDSpeedHandle_M1.wLowerIntegralLimit = -(int32_t)A_IQMAX * (int32_t)SP_KIDIV;
+              PIDSpeedHandle_M1.hLowerOutputLimit = -(int16_t)A_IQMAX;
+            }
             MotSpinPollCount = 0;                                                                                               //Reset motor spinning loop count as timeout counter
             tt_SpinPollTime = getSysCount() + SpinPollPeriod;                                                                   //prepare next time tick value for OTF_STARTUP_MODULE
             return_state_u8 = OTF_STARTUP_MODULE;
