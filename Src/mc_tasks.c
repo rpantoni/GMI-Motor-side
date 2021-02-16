@@ -416,7 +416,11 @@ __weak void TSK_MediumFrequencyTaskM1(void)
     if ( STM_NextState( &STM[M1], START ) == true )
     {
 #if (CONTROLLED_BRAKING==1)
-    BrakeHandle_M1.Adapt_BusVoltageRef = VBS_GetAvBusVoltage_V(&(pBusSensorM1->_Super)) + BrakeHandle_M1.Vbus_Add;
+      BrakeHandle_M1.Adapt_BusVoltageRef = VBS_GetAvBusVoltage_V(&(pBusSensorM1->_Super)) + BrakeHandle_M1.Vbus_Add;
+      pPIDSpeed[M1]->wUpperIntegralLimit = (int32_t)A_IQMAX * (int32_t)SP_KIDIV;
+      pPIDSpeed[M1]->wLowerIntegralLimit = -(int32_t)A_IQMAX * (int32_t)SP_KIDIV;
+      pPIDSpeed[M1]->hUpperOutputLimit = (int16_t)A_IQMAX;
+      pPIDSpeed[M1]->hLowerOutputLimit = -(int16_t)A_IQMAX;
 #endif      
       FOC_Clear( M1 );
 
@@ -515,7 +519,9 @@ __weak void TSK_MediumFrequencyTaskM1(void)
     STC_SetSpeedSensor(pSTC[M1], &STO_PLL_M1._Super); /*Observer has converged*/
     {
       /* USER CODE BEGIN MediumFrequencyTask M1 1 */
-
+      //Regenerative control during motor run state
+      RegenControlM1(pBrakeId[M1], pPIDBk[M1],pPIDSpeed[M1], pSTC[M1], pBusSensorM1);
+      
       /* USER CODE END MediumFrequencyTask M1 1 */      
 	  FOC_InitAdditionalMethods(M1);
       FOC_CalcCurrRef( M1 );
@@ -528,7 +534,9 @@ __weak void TSK_MediumFrequencyTaskM1(void)
 
   case RUN:
     /* USER CODE BEGIN MediumFrequencyTask M1 2 */
-
+    //Regenerative control during motor run state
+    RegenControlM1(pBrakeId[M1], pPIDBk[M1],pPIDSpeed[M1], pSTC[M1], pBusSensorM1);
+    
     /* USER CODE END MediumFrequencyTask M1 2 */
 
     MCI_ExecBufferedCommands( oMCInterface[M1] );

@@ -6,7 +6,7 @@
   * @details This file has declarations for motor control algorithms such as on-the-fly and non-regenerative braking
   ********************************************************************************************************************************
   */
-
+#include "drive_parameters.h"
 #include "regal_mc_lib.h"
 #include "bus_voltage_sensor.h"
 #include "mc_math.h"
@@ -255,4 +255,21 @@ void FOCStop_CalcCurrRef(Braking_Handle_t * pBrakeHandle, PID_Handle_t * pPIDBus
     pFOCHandle_t->Iqdref.q = FOC_BusVoltageControlM1(pBrakeHandle, pPIDBusHandle, pBSHandle); 
     pFOCHandle_t->Iqdref.d = FOC_ImaxCurrentControllerM1(pBrakeHandle, pPIDImHandle, pFOCHandle_t );
   }
+}
+
+/**
+  * @brief non-regenerative braking when motor is at running state
+*/
+void RegenControlM1(Braking_Handle_t * pBkHandle, PID_Handle_t * pPIDBusHandle, PID_Handle_t * pPIDSpeedHandle, SpeednTorqCtrl_Handle_t * pSTCHandle, RDivider_Handle_t * pBSHandle)
+{
+    if ((MC_GetImposedDirectionMotor1()==1)&&((pSTCHandle->SPD->hAvrMecSpeedUnit - pSTCHandle->TargetFinal) > 10))
+    {//FWD direction
+      pPIDSpeedHandle->hLowerOutputLimit = FOC_BusVoltageControlM1(pBkHandle, pPIDBusHandle, pBSHandle); 
+      pPIDSpeedHandle->wLowerIntegralLimit = (int32_t) pPIDSpeedHandle->hLowerOutputLimit * (int32_t)SP_KIDIV;
+    }
+    else if ((MC_GetImposedDirectionMotor1()==-1)&&((pSTCHandle->SPD->hAvrMecSpeedUnit - pSTCHandle->TargetFinal) < -10))
+    {//REV direction
+      pPIDSpeedHandle->hUpperOutputLimit = FOC_BusVoltageControlM1(pBkHandle, pPIDBusHandle, pBSHandle);
+      pPIDSpeedHandle->wUpperIntegralLimit = (int32_t) pPIDSpeedHandle->hUpperOutputLimit * (int32_t)SP_KIDIV;
+    }  
 }
