@@ -177,19 +177,19 @@
 /******************************   START-UP PARAMETERS   **********************/
 
 /* Phase 1 */
-#define PHASE1_DURATION                1000 /*milliseconds */
+#define PHASE1_DURATION                200 /*milliseconds */
 #define PHASE1_FINAL_SPEED_UNIT         (0*SPEED_UNIT/_RPM) 
-#define PHASE1_FINAL_CURRENT           2190
+#define PHASE1_FINAL_CURRENT           0
 /* Phase 2 */
-#define PHASE2_DURATION                5000 /*milliseconds */
-#define PHASE2_FINAL_SPEED_UNIT         (1000*SPEED_UNIT/_RPM)
-#define PHASE2_FINAL_CURRENT           2190
+#define PHASE2_DURATION                1000 /*milliseconds */
+#define PHASE2_FINAL_SPEED_UNIT         (0*SPEED_UNIT/_RPM)
+#define PHASE2_FINAL_CURRENT           0
 /* Phase 3 */
-#define PHASE3_DURATION                0 /*milliseconds */
-#define PHASE3_FINAL_SPEED_UNIT         (1000*SPEED_UNIT/_RPM)
+#define PHASE3_DURATION                1000 /*milliseconds */
+#define PHASE3_FINAL_SPEED_UNIT         (0*SPEED_UNIT/_RPM)
 #define PHASE3_FINAL_CURRENT           2190
 /* Phase 4 */
-#define PHASE4_DURATION                0 /*milliseconds */
+#define PHASE4_DURATION                5000 /*milliseconds */
 #define PHASE4_FINAL_SPEED_UNIT         (1000*SPEED_UNIT/_RPM)
 #define PHASE4_FINAL_CURRENT           2190
 /* Phase 5 */
@@ -197,11 +197,11 @@
 #define PHASE5_FINAL_SPEED_UNIT         (1000*SPEED_UNIT/_RPM)
 #define PHASE5_FINAL_CURRENT           2190
 
-#define ENABLE_SL_ALGO_FROM_PHASE      2
+#define ENABLE_SL_ALGO_FROM_PHASE      1
 /* Sensor-less rev-up sequence */
 #define STARTING_ANGLE_DEG             0  /*!< degrees [0...359] */                                                             
 /* Observer start-up output conditions  */
-#define OBS_MINIMUM_SPEED_RPM          350
+#define OBS_MINIMUM_SPEED_RPM          250
 
 #define NB_CONSECUTIVE_TESTS           2 /* corresponding to 
                                                          former NB_CONSECUTIVE_TESTS/

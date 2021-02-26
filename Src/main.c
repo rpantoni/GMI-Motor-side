@@ -93,8 +93,7 @@ uint16_t busV_ave = 0;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  PIDSpeedHandle_M1.hLowerOutputLimit=0;
-  PIDSpeedHandle_M1.wLowerIntegralLimit=0;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/

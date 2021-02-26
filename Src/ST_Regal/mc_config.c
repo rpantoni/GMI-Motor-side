@@ -127,7 +127,7 @@ RevUpCtrl_Handle_t RevUpControlM1 =
   .bFirstAccelerationStage = (ENABLE_SL_ALGO_FROM_PHASE-1u),   
   .hMinStartUpValidSpeed   = OBS_MINIMUM_SPEED_UNIT, 
   .hMinStartUpFlySpeed     = (int16_t)(OBS_MINIMUM_SPEED_UNIT/2),  
-  .OTFStartupEnabled       = false,  
+  .OTFStartupEnabled       = true,  
   .OTFPhaseParams         = {(uint16_t)500,                 
                                          0,                 
                              (int16_t)PHASE5_FINAL_CURRENT,
@@ -252,7 +252,8 @@ STO_PLL_Handle_t STO_PLL_M1 =
 // .MaxAppPositiveMecSpeedUnit         =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT*1.15), 
  .F1LOG                              =	F1_LOG,                            
  .F2LOG                              =	F2_LOG,                            
- .SpeedBufferSizeDppLOG              =	STO_FIFO_DEPTH_DPP_LOG             
+ .SpeedBufferSizeDppLOG              =	STO_FIFO_DEPTH_DPP_LOG,
+ .hForcedDirection                   =  0x0000U             
 };
 STO_PLL_Handle_t *pSTO_PLL_M1 = &STO_PLL_M1; 
 
@@ -451,14 +452,14 @@ void RegalSetting_Init(void){
   RevUpControlM1.ParamsData[2].pNext = &RevUpControlM1.ParamsData[3];
  
   RevUpControlM1.ParamsData[3].hDurationms = (uint16_t)A_PHASE4_DURATION;
-  RevUpControlM1.ParamsData[2].hFinalMecSpeedUnit = (int16_t)(A_PHASE4_FINAL_SPEED_UNIT);
-  RevUpControlM1.ParamsData[2].hFinalTorque = (int16_t)A_PHASE4_FINAL_CURRENT;
-  RevUpControlM1.ParamsData[2].pNext = &RevUpControlM1.ParamsData[4];
+  RevUpControlM1.ParamsData[3].hFinalMecSpeedUnit = (int16_t)(A_PHASE4_FINAL_SPEED_UNIT);
+  RevUpControlM1.ParamsData[3].hFinalTorque = (int16_t)A_PHASE4_FINAL_CURRENT;
+  RevUpControlM1.ParamsData[3].pNext = &RevUpControlM1.ParamsData[4];
     
-  RevUpControlM1.ParamsData[3].hDurationms = (uint16_t)A_PHASE5_DURATION;
-  RevUpControlM1.ParamsData[2].hFinalMecSpeedUnit = (int16_t)(A_PHASE5_FINAL_SPEED_UNIT);
-  RevUpControlM1.ParamsData[2].hFinalTorque = (int16_t)A_PHASE5_FINAL_CURRENT;
-  RevUpControlM1.ParamsData[2].pNext = (void*)MC_NULL;
+  RevUpControlM1.ParamsData[4].hDurationms = (uint16_t)A_PHASE5_DURATION;
+  RevUpControlM1.ParamsData[4].hFinalMecSpeedUnit = (int16_t)(A_PHASE5_FINAL_SPEED_UNIT);
+  RevUpControlM1.ParamsData[4].hFinalTorque = (int16_t)A_PHASE5_FINAL_CURRENT;
+  RevUpControlM1.ParamsData[4].pNext = (void*)MC_NULL;
   
   
   //MAX_APPLICATION_SPEED_RPM parameter dependance => MAX_BEMF_VOLTAGE parameter dependance => C3

@@ -36,17 +36,17 @@ __weak const uint16_t   SPEED_UP_RAMP_RATE           @(FLASH_USER_START_ADDR + (
 __weak const uint16_t   SPEED_DOWN_RAMP_RATE         @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_DOWN_RAMP_RATE         ) ) = 100       ;             
 __weak const uint16_t   SPEED_CONSIDERED_STOPPED     @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_CONSIDERED_STOPPED     ) ) = 200       ;             
 __weak const uint16_t   MotSpinTimeOut               @(FLASH_USER_START_ADDR + (2 *  Index_MotSpinTimeOut               ) ) = 4         ;             
-__weak const uint16_t   SpinPollPeriod               @(FLASH_USER_START_ADDR + (2 *  Index_SpinPollPeriod               ) ) = 5000      ;             
+__weak const uint16_t   SpinPollPeriod               @(FLASH_USER_START_ADDR + (2 *  Index_SpinPollPeriod               ) ) = 4000      ;             
 __weak const uint16_t   numOfStartRetry              @(FLASH_USER_START_ADDR + (2 *  Index_numOfStartRetry              ) ) = 6         ;             
 __weak const uint16_t   StartRetryPeriod             @(FLASH_USER_START_ADDR + (2 *  Index_StartRetryPeriod             ) ) = 2000      ;             
 __weak const uint16_t   StartPeriodInc               @(FLASH_USER_START_ADDR + (2 *  Index_StartPeriodInc               ) ) = 10000     ;             
-__weak const uint16_t   over_current_threshold       @(FLASH_USER_START_ADDR + (2 *  Index_over_current_threshold       ) ) = 1000      ;             
+__weak const uint16_t   over_current_threshold       @(FLASH_USER_START_ADDR + (2 *  Index_over_current_threshold       ) ) = 5000      ;             
 __weak const uint16_t   over_current_rpm_Reduce      @(FLASH_USER_START_ADDR + (2 *  Index_over_current_rpm_Reduce      ) ) = 10        ;             
 __weak const uint16_t   OvCurrent_derate_period      @(FLASH_USER_START_ADDR + (2 *  Index_OvCurrent_derate_period      ) ) = 200       ;             
-__weak const uint16_t   over_power_threshold         @(FLASH_USER_START_ADDR + (2 *  Index_over_power_threshold         ) ) = 3000      ;             
+__weak const uint16_t   over_power_threshold         @(FLASH_USER_START_ADDR + (2 *  Index_over_power_threshold         ) ) = 10000      ;             
 __weak const uint16_t   over_power_rpm_Reduce        @(FLASH_USER_START_ADDR + (2 *  Index_over_power_rpm_Reduce        ) ) = 10        ;             
 __weak const uint16_t   OvPower_derate_period        @(FLASH_USER_START_ADDR + (2 *  Index_OvPower_derate_period        ) ) = 200       ;             
-__weak const uint16_t   over_temperature_threshold   @(FLASH_USER_START_ADDR + (2 *  Index_over_temperature_threshold   ) ) = 33        ;             
+__weak const uint16_t   over_temperature_threshold   @(FLASH_USER_START_ADDR + (2 *  Index_over_temperature_threshold   ) ) = 53        ;             
 __weak const uint16_t   over_temperature_rpm_Reduce  @(FLASH_USER_START_ADDR + (2 *  Index_over_temperature_rpm_Reduce  ) ) = 10        ;             
 __weak const uint16_t   OvTemp_derate_period         @(FLASH_USER_START_ADDR + (2 *  Index_OvTemp_derate_period         ) ) = 30000     ;     
 
@@ -118,11 +118,11 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
       module_StateMachineControl.command_Speed = 0; //disable the motor
       return_state_u8 = IDLE_MODULE;  
     }
-    if( MC_GetSTMStateMotor1() == FAULT_NOW) {
+    if((next_State_u8 != INIT_MODULE)&&( MC_GetSTMStateMotor1() == FAULT_NOW)) {//
       GMI_FaultStatus = 0x02;                                           //ST_Motor fault error persisting
       next_State_u8 = FAULT_REPORT_MODULE;                              //report fault and return
     }
-    else if(MC_GetSTMStateMotor1() == FAULT_OVER) next_State_u8 = FAULT_PROCESS_MODULE;                         //after fault over then can process the fault and restart
+    else if((next_State_u8 != INIT_MODULE)&&(MC_GetSTMStateMotor1() == FAULT_OVER)) next_State_u8 = FAULT_PROCESS_MODULE;                         //after fault over then can process the fault and restart             //
     else if((next_State_u8 != INIT_MODULE)&& (next_State_u8 != IRQ_MODULE))
     {        
         if(module_StateMachineControl.command_Speed == 0) {   // any situation see stop command will change to stop state, unless IRQ and stopping states
@@ -182,21 +182,6 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
             setSpeed(module_StateMachineControl.command_Speed * (int32_t) module_StateMachineControl.motorDir);                                                                 //Command ST motor libraries for running the speed of module_StateMachineControl.targetSpeed
             MC_StartMotor1();
             act_dir = MC_GetImposedDirectionMotor1();
-            // Temporary integrator limits to avoid regen when decelerating, a dc bus control method will be implemented soon
-            if (act_dir == 1)
-            {
-              PIDSpeedHandle_M1.hLowerOutputLimit=0;
-              PIDSpeedHandle_M1.wLowerIntegralLimit=0;
-              PIDSpeedHandle_M1.wUpperIntegralLimit = (int32_t)A_IQMAX * (int32_t)SP_KIDIV;
-              PIDSpeedHandle_M1.hUpperOutputLimit = (int16_t)A_IQMAX;              
-            }
-            else if (act_dir == -1)
-            {
-              PIDSpeedHandle_M1.hUpperOutputLimit=0;
-              PIDSpeedHandle_M1.wUpperIntegralLimit=0;          
-              PIDSpeedHandle_M1.wLowerIntegralLimit = -(int32_t)A_IQMAX * (int32_t)SP_KIDIV;
-              PIDSpeedHandle_M1.hLowerOutputLimit = -(int16_t)A_IQMAX;
-            }
             MotSpinPollCount = 0;                                                                                               //Reset motor spinning loop count as timeout counter
             tt_SpinPollTime = getSysCount() + SpinPollPeriod;                                                                   //prepare next time tick value for OTF_STARTUP_MODULE
             return_state_u8 = OTF_STARTUP_MODULE;
@@ -449,7 +434,7 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
         }
         case FAULT_REPORT_MODULE: {
             setupSoftwareIRQ(module_id_u8, MODULE_ERR_LOGHANDLE, 0xEF, GMI_FaultStatus, 0x00, NULL);  
-            tt_FaultOTFWaitTime = getSysCount() + 30000; //ST_Motor fault error persisting//Note: in FAULT_NOW situation will continue to issue fault to error-module 
+            tt_FaultOTFWaitTime = getSysCount() + 1000; //ST_Motor fault error persisting//Note: in FAULT_NOW situation will continue to issue fault to error-module 
               return_state_u8 = FAULT_WAIT_MODULE;
             break;
         }
