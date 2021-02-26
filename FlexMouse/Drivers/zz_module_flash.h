@@ -24,6 +24,7 @@
 #include "mc_stm_types.h"
 #include "mc_type.h"
 #include "hall_speed_pos_fdbk.h"
+#include "regal_mc_lib.h"
 
 /* Content ---------------------------------------------------------------------------------------------------------------------*/
 #ifdef __cplusplus
@@ -113,17 +114,29 @@ typedef enum
   Index_A_PHASE5_FINAL_SPEED_UNIT      ,     // reg34  _1	MC_PROTOCOL_CODE_SET_REVUP_DATA:
   Index_A_PHASE5_FINAL_CURRENT         ,     // reg35  _1	MC_PROTOCOL_CODE_SET_REVUP_DATA:
   Index_A_TRANSITION_DURATION          ,     // reg36  _1	MC_PROTOCOL_CODE_SET_REVUP_DATA:
+  //Braking and On-the-fly definitions
+  Index_CONTROLLED_BRAKING             ,     // reg37  _     1u
+  Index_BK_VBUS_ADD                    ,     // reg38  _     20 
+  Index_BK_RAMP_a                      ,     // reg39  _     (int32_t) 13
+  Index_BK_RAMP_b                      ,     // reg40  _     (int32_t) -6
+  Index_BK_RAMP_c                      ,     // reg41  _     (int32_t) 1220
+  Index_OTF_DBEMFG                     ,     // reg42  _             256
+  Index_OTF_MAX_BEMFG                  ,     // reg43  _     320
+  Index_OTF_MIN_BEMFG                  ,     // reg44  _     250
+  Index_OTF_MAX_SYNC_SPEED             ,     // reg45  _     120
+  Index_OTF_MIN_SYNC_SPEED             ,     // reg46  _     30
+//////////////////////////////////////////////////////////
   // below are future configurable data      
-  Index_D_HALL_SENSORS_PLACEMENT       ,     // reg37  _1
-  Index_D_HALL_PHASE_SHIFT             ,     // reg38  _1
-  Index_D_M1_ENCODER_PPR               ,     // reg39  _ 
+  Index_D_HALL_SENSORS_PLACEMENT       ,     // reg47  _1
+  Index_D_HALL_PHASE_SHIFT             ,     // reg48  _1
+  Index_D_M1_ENCODER_PPR               ,     // reg49  _ 
 #if GAIN1 != 0   //pll or cord
-  Index_A_GAIN1                        ,     // reg40  _ 
-  Index_A_GAIN2                        ,     // reg41  _ 
+  Index_A_GAIN1                        ,     // reg50  _ 
+  Index_A_GAIN2                        ,     // reg51  _ 
 #else
-  Index_D_CORD_GAIN1                   ,     // reg40  _ 
-  Index_D_CORD_GAIN2                   ,     // reg41  _ 
-  Index_D_CORD_MAX_ACCEL_DPPP          ,     // reg42  _1
+  Index_D_CORD_GAIN1                   ,     // reg50  _ 
+  Index_D_CORD_GAIN2                   ,     // reg51  _ 
+  Index_D_CORD_MAX_ACCEL_DPPP          ,     // reg52  _1
 #endif //GAIN1   //pll or cord
   Index_ST_MOT_LIB_PARAMETERS_END      ,      
   //Module setting data should append below here and group as each module
@@ -159,7 +172,7 @@ typedef enum
 
 __weak const uint16_t A_POLE_PAIR_NUM               @(FLASH_USER_START_ADDR + (2 * Index_A_POLE_PAIR_NUM               )  ) = POLE_PAIR_NUM            		; 
 __weak const uint16_t A_RS                          @(FLASH_USER_START_ADDR + (2 * Index_A_RS                          )  ) = (RS * 1000)              		; //in mOhm
-__weak const uint16_t A_LS                          @(FLASH_USER_START_ADDR + (2 * Index_A_LS                          )  ) = (LS * 1000)              		; //in mH
+__weak const uint16_t A_LS                          @(FLASH_USER_START_ADDR + (2 * Index_A_LS                          )  ) = (LS * 100000)           		; //in mH
 __weak const uint16_t A_NOMINAL_CURRENT             @(FLASH_USER_START_ADDR + (2 * Index_A_NOMINAL_CURRENT             )  ) = NOMINAL_CURRENT          		; 
 __weak const uint16_t A_MAX_APPLICATION_SPEED_RPM   @(FLASH_USER_START_ADDR + (2 * Index_A_MAX_APPLICATION_SPEED_RPM   )  ) = MAX_APPLICATION_SPEED_RPM         ; //this parameter have to takecare of its dependance //MAX_BEMF_VOLTAGE parameter dependance => C3
                                                                                                                                                                                                                       //MAX_APPLICATION_SPEED_RPM parameter dependance => MAX_APPLICATION_SPEED_UNIT
@@ -195,6 +208,18 @@ __weak const uint16_t A_PHASE5_DURATION             @(FLASH_USER_START_ADDR + (2
 __weak const uint16_t A_PHASE5_FINAL_SPEED_UNIT     @(FLASH_USER_START_ADDR + (2 * Index_A_PHASE5_FINAL_SPEED_UNIT     )  ) = PHASE5_FINAL_SPEED_UNIT    	; 
 __weak const uint16_t A_PHASE5_FINAL_CURRENT        @(FLASH_USER_START_ADDR + (2 * Index_A_PHASE5_FINAL_CURRENT        )  ) = PHASE5_FINAL_CURRENT       	; 
 __weak const uint16_t A_TRANSITION_DURATION         @(FLASH_USER_START_ADDR + (2 * Index_A_TRANSITION_DURATION         )  ) = TRANSITION_DURATION        	; 
+
+__weak const uint16_t CONTROLLED_BRAKING            @(FLASH_USER_START_ADDR + (2 *   Index_CONTROLLED_BRAKING          )  ) = default_CONTROLLED_BRAKING   	; 
+__weak const uint16_t BK_VBUS_ADD                   @(FLASH_USER_START_ADDR + (2 *   Index_BK_VBUS_ADD                 )  ) = default_BK_VBUS_ADD          	; 
+__weak const int16_t BK_RAMP_a                      @(FLASH_USER_START_ADDR + (2 *   Index_BK_RAMP_a                   )  ) = default_BK_RAMP_a            	; 
+__weak const int16_t BK_RAMP_b                      @(FLASH_USER_START_ADDR + (2 *   Index_BK_RAMP_b                   )  ) = default_BK_RAMP_b            	; 
+__weak const int16_t BK_RAMP_c                      @(FLASH_USER_START_ADDR + (2 *   Index_BK_RAMP_c                   )  ) = default_BK_RAMP_c            	; 
+__weak const uint16_t OTF_DBEMFG                    @(FLASH_USER_START_ADDR + (2 *   Index_OTF_DBEMFG                  )  ) = default_OTF_DBEMFG           	; 
+__weak const uint16_t OTF_MAX_BEMFG                 @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MAX_BEMFG               )  ) = default_OTF_MAX_BEMFG        	; 
+__weak const uint16_t OTF_MIN_BEMFG                 @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MIN_BEMFG               )  ) = default_OTF_MIN_BEMFG        	; 
+__weak const uint16_t OTF_MAX_SYNC_SPEED            @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MAX_SYNC_SPEED          )  ) = default_OTF_MAX_SYNC_SPEED   	; 
+__weak const uint16_t OTF_MIN_SYNC_SPEED            @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MIN_SYNC_SPEED          )  ) = default_OTF_MIN_SYNC_SPEED   	; 
+
 __weak const uint16_t D_HALL_SENSORS_PLACEMENT      @(FLASH_USER_START_ADDR + (2 * Index_D_HALL_SENSORS_PLACEMENT      )  ) = HALL_SENSORS_PLACEMENT     	; 
 __weak const uint16_t D_HALL_PHASE_SHIFT            @(FLASH_USER_START_ADDR + (2 * Index_D_HALL_PHASE_SHIFT            )  ) = HALL_PHASE_SHIFT           	; 
 __weak const uint16_t D_M1_ENCODER_PPR              @(FLASH_USER_START_ADDR + (2 * Index_D_M1_ENCODER_PPR              )  ) = M1_ENCODER_PPR             	; 

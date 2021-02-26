@@ -16,7 +16,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "mc_tuning.h"
 
-#define CONTROLLED_BRAKING 1u
 #define REGAL_OTF 1u
 
 ////////////////////////////////////////////////////////////////////////////
@@ -46,12 +45,6 @@
 #define SPEED_TRANSITION                65
 #define alpha_br                         (int16_t) (FP8*0.7)
 #define BYTE_SHIFT                      8   
-#define BK_VBUS_ADD                     20
-// RPa: the following hash defines are for the IMax trajectories to always be within the motor loss ellipse
-//      This has to be adapted for each motor class; for conservative setting: a=13, b=-6, c=1220
-#define BK_RAMP_a          (int32_t) 13
-#define BK_RAMP_b          (int32_t) -6
-#define BK_RAMP_c          (int32_t) 1220
 
 // RPa: Imax Control loop
 #define PID_IMAX_KP_DEFAULT          55
@@ -68,12 +61,23 @@
 // RPa: On-the-fly definitions
 #define BEMF_DEC 8
 #define TREF_SYNC (int16_t) (0.7 * PHASE3_FINAL_CURRENT )
-#define OTF_DBEMFG 256
-#define OTF_MAX_BEMFG 270
-#define OTF_MIN_BEMFG 200
-#define OTF_MAX_SYNC_SPEED 150
-#define OTF_MIN_SYNC_SPEED 30
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////
+//Braking and On-the-fly definitions for default value
+#define default_CONTROLLED_BRAKING      1u
+#define default_BK_VBUS_ADD             20 
+// RPa: the following hash defines are for the IMax trajectories to always be within the motor loss ellipse
+//      This has to be adapted for each motor class; for conservative setting: a=13, b=-6, c=1220
+#define default_BK_RAMP_a               13
+#define default_BK_RAMP_b               -6
+#define default_BK_RAMP_c               1220
+#define default_OTF_DBEMFG              256
+#define default_OTF_MAX_BEMFG           320
+#define default_OTF_MIN_BEMFG           250
+#define default_OTF_MAX_SYNC_SPEED      120
+#define default_OTF_MIN_SYNC_SPEED      30
+//////////////////////////////////////////////////////////
 
 typedef enum IMAX_PHASE {
     STARTRAMP = 0,

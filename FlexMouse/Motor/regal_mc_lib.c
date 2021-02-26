@@ -14,6 +14,7 @@
 #include "mc_api.h"
 #include "mc_config.h"
 #include "revup_ctrl.h"
+#include "zz_module_flash.h"
 
 /*Private Variables */
 static uint8_t Imax_count = 0;
@@ -69,7 +70,7 @@ Braking_Handle_t BrakeHandle_M1 =
   .BrakingPhase = STARTRAMP,
   .IMax_Ref = 500,
   .FeedForward_term = 0,
-  .Vbus_Add = BK_VBUS_ADD /*Vbus upper limit to give motor braking power */
+//  .Vbus_Add = BK_VBUS_ADD /*Vbus upper limit to give motor braking power */
 };
 
 /**
@@ -80,14 +81,14 @@ OTF_Handle_t OTFHandle_M1 =
   .hdir = 1, /* check for collinearity during detection phase */
   .hSyncTRef = TREF_SYNC, /* Reference Iq during transition to speed control, can be set to the final ramp current in the drive parameters (or 70% of it) */
   .CoilShortSpeed = 10, /* speed in the syncrhonisation phase when turning the low-side is safe and be done to put motor to stationary position */
-  .MaxSyncSpeed = OTF_MAX_SYNC_SPEED, /* Maximum speed for motor to synchronise */
-  .MinSyncSpeed = OTF_MIN_SYNC_SPEED, /* Minimum speed for motor to synchronise */
+//  .MaxSyncSpeed = OTF_MAX_SYNC_SPEED, /* Maximum speed for motor to synchronise */
+//  .MinSyncSpeed = OTF_MIN_SYNC_SPEED, /* Minimum speed for motor to synchronise */
   .seamless_transfer = 0, /* tracking the different phase of revup and used for integrator seeding */
   .bemfg_alpha = 256, /* alpha gain of the bemf */
   .bemfg_beta = 256, /* beta gain of the bemf */
-  .detect_bemfg = OTF_DBEMFG, /* bemf gain for good detection */
-  .max_bemfg = OTF_MAX_BEMFG, /* maximum gain to clip vbus without causing instability to the observer or OCP tripping */
-  .min_bemfg = OTF_MIN_BEMFG /* minimum gain for vbus clipping without causing OVP tripping, at the nominal voltage, can be set to 256 to flatten out dc bus */
+//  .detect_bemfg = OTF_DBEMFG, /* bemf gain for good detection */
+//  .max_bemfg = OTF_MAX_BEMFG, /* maximum gain to clip vbus without causing instability to the observer or OCP tripping */
+//  .min_bemfg = OTF_MIN_BEMFG /* minimum gain for vbus clipping without causing OVP tripping, at the nominal voltage, can be set to 256 to flatten out dc bus */
 };
 
 

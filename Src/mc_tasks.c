@@ -148,7 +148,15 @@ __weak void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS],MCT_Handle_t* pMCTList
   pwmcHandle[M1] = &PWM_Handle_M1._Super;
   R3_1_Init(&PWM_Handle_M1);
   /* USER CODE BEGIN MCboot 1 */
-
+  /*********************************************************/
+  /*    Braking and On-the-fly component initialization    */
+  /*********************************************************/
+  BrakeHandle_M1.Vbus_Add = BK_VBUS_ADD;
+  OTFHandle_M1.MaxSyncSpeed = OTF_MAX_SYNC_SPEED;
+  OTFHandle_M1.MinSyncSpeed = OTF_MIN_SYNC_SPEED;
+  OTFHandle_M1.detect_bemfg = OTF_DBEMFG;
+  OTFHandle_M1.max_bemfg = OTF_MAX_BEMFG;
+  OTFHandle_M1.min_bemfg = OTF_MIN_BEMFG;
   /* USER CODE END MCboot 1 */
 
   /**************************************/
