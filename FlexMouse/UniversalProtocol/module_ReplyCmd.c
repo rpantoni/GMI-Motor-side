@@ -34,7 +34,7 @@ typedef enum                                                            //data r
 }ReplyCMD;
          //         item       0  1  2    3    4    5   6   7         -- as the valuable will match in the same way for the enum command list above
 uint64_t tt_PerioidTime[]   = {0, 0, 0,   0,   0,   0,  0,  0};                                //please declare total numbers of items in enum, for example three zero with 3 command in enum
-uint16_t PerioidTimeValue[] = {0, 0, 0,   0, 1000, 0,   0,  2000};      ///please declare total numbers of items in enum, for example three zero with 3 
+uint16_t PerioidTimeValue[] = {0, 0, 0,   0, 550, 0,   0,  5000};      ///please declare total numbers of items in enum, for example three zero with 3 
                                                  ///command in enum,you can put the default reply period in the relative item, then it will report data automatically.
                                                  /// for example item2 is Measured-speed will send back every 1000mS
 /**************************************************************************************************************************/
@@ -259,7 +259,7 @@ uint8_t moduleReplyCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, uint8_t 
                   } 
                  case 7:
                   { //HeartBeat Request     
-                    unsigned char HeartBeatTx[] = {0x55, 0x04, 0x4E, 0x5A, 0xA5, 0xff, 0xff, 0xCC, 0xCC};// Just send 0x5AA5 to App-side and get a response
+                    unsigned char HeartBeatTx[] = {0x55, 0x02, 0x4E, 0x00, 0x00, 0x5A, 0xA5, 0xCC, 0xCC};// Just send 0x5AA5 to App-side and get a response
                     TxLen = sizeof(HeartBeatTx);
                     RingBuf_WriteBlock((*usart2Control_ReplyCmd).seqMemTX_u32, HeartBeatTx, &TxLen); 
                     break;
