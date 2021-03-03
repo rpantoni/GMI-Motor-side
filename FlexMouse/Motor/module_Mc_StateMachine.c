@@ -36,7 +36,7 @@ __weak const uint16_t   SPEED_UP_RAMP_RATE           @(FLASH_USER_START_ADDR + (
 __weak const uint16_t   SPEED_DOWN_RAMP_RATE         @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_DOWN_RAMP_RATE         ) ) = 100       ;             
 __weak const uint16_t   SPEED_CONSIDERED_STOPPED     @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_CONSIDERED_STOPPED     ) ) = 200       ;             
 __weak const uint16_t   MotSpinTimeOut               @(FLASH_USER_START_ADDR + (2 *  Index_MotSpinTimeOut               ) ) = 4         ;             
-__weak const uint16_t   SpinPollPeriod               @(FLASH_USER_START_ADDR + (2 *  Index_SpinPollPeriod               ) ) = 4000      ;             
+__weak const uint16_t   SpinPollPeriod               @(FLASH_USER_START_ADDR + (2 *  Index_SpinPollPeriod               ) ) = PHASE1_DURATION + PHASE2_DURATION  + PHASE3_DURATION + PHASE4_DURATION   ;             
 __weak const uint16_t   numOfStartRetry              @(FLASH_USER_START_ADDR + (2 *  Index_numOfStartRetry              ) ) = 6         ;             
 __weak const uint16_t   StartRetryPeriod             @(FLASH_USER_START_ADDR + (2 *  Index_StartRetryPeriod             ) ) = 2000      ;             
 __weak const uint16_t   StartPeriodInc               @(FLASH_USER_START_ADDR + (2 *  Index_StartPeriodInc               ) ) = 10000     ;             
@@ -61,6 +61,7 @@ __weak const uint16_t   OvTemp_derate_period         @(FLASH_USER_START_ADDR + (
 
 int32_t target_speed = 0;                               //Actural speed to submit into ST motor libaries                        
 int16_t act_dir = 1;
+bool autorestart = TRUE;
 /************************ Motor start spinning timing parameter  ********************************************************/
 static uint16_t MotSpinPollCount = 0;
 //#define MotSpinTimeOut 4                        //max motor spin poll count for time out measurement
@@ -99,7 +100,6 @@ uint64_t tt_TurnOnLowSideTime;
 
 //RPa: OTF temporary fix
 uint64_t tt_FaultOTFWaitTime;
-
 
 /****************** local fault status ************************/
 /** GMI_FaultStatus => 0x01 = start-up retry error            */
@@ -167,10 +167,15 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
           break;
         }
         case IDLE_MODULE: {
-          if(module_StateMachineControl.command_Speed != 0)
+          if((module_StateMachineControl.command_Speed != 0)&&(autorestart==TRUE))
           {
             return_state_u8 = PRE_START_MODULE;
             break;
+          }
+          else if ((module_StateMachineControl.command_Speed == 0)&&(autorestart==FALSE))
+          {
+            module_StateMachineControl.errorCode_u8 =0;
+            autorestart = TRUE;
           }
         StartRetryCounter = 0;                                                    //this variable combine with StartRetryPeriod to form the timeout of start retry
         MotSpinPollCount = 0;                                                     //this value combine the startRetryTime delay to form the timeout 
@@ -426,7 +431,8 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
         //Error report 
         case FAULT_PROCESS_MODULE: {
        //     if( setting status ){                                                                                             //Fault command will be issued according to user setting!!
-              MC_AcknowledgeFaultMotor1();                                                                                      //CLear ST motor libraries fault status
+          module_StateMachineControl.errorCode_u8 = MC_GetOccurredFaultsMotor1();    
+          MC_AcknowledgeFaultMotor1();                                                                                      //CLear ST motor libraries fault status
        //     }
             MotSpinPollCount = 0;                                                                                               //Reset motor spinning loop count as timeout counter
             return_state_u8 = FAULT_REPORT_MODULE;
@@ -434,15 +440,17 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
         }
         case FAULT_REPORT_MODULE: {
             setupSoftwareIRQ(module_id_u8, MODULE_ERR_LOGHANDLE, 0xEF, GMI_FaultStatus, 0x00, NULL);  
-            tt_FaultOTFWaitTime = getSysCount() + 1000; //ST_Motor fault error persisting//Note: in FAULT_NOW situation will continue to issue fault to error-module 
+            tt_FaultOTFWaitTime = getSysCount() + 10000; //ST_Motor fault error persisting//Note: in FAULT_NOW situation will continue to issue fault to error-module 
               return_state_u8 = FAULT_WAIT_MODULE;
             break;
         }
         
-    case FAULT_WAIT_MODULE: {
-      
+    case FAULT_WAIT_MODULE: { 
       if (getSysCount()>=tt_FaultOTFWaitTime)
       {
+#if (FAULT_AUTOSTART==0)    
+        autorestart = FALSE;
+#endif
         return_state_u8 = IDLE_MODULE;
         break;
       }
@@ -450,6 +458,7 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
       {
         
       }
+
       return_state_u8 = FAULT_WAIT_MODULE;
       break;
     }

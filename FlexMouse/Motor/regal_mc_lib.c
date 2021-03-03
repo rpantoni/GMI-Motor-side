@@ -66,11 +66,11 @@ PID_Handle_t PIDImHandle_M1 =
   */
 Braking_Handle_t BrakeHandle_M1 =
 {
-  .Nbar = 205,
-  .BrakingPhase = STARTRAMP,
-  .IMax_Ref = 500,
-  .FeedForward_term = 0,
-//  .Vbus_Add = BK_VBUS_ADD /*Vbus upper limit to give motor braking power */
+  .Nbar = 205,                          /* Feed-forward gain */
+  .BrakingPhase = STARTRAMP,            /* Braking state used for Id injection */
+  .IMax_Ref = 500,                      /* default IMax reference for copper loss control */
+  .FeedForward_term = 0,                /* Feedforward Voltage that would improve transient response without affecting the stability of the system */
+//  .Vbus_Add = BK_VBUS_ADD             /*Vbus upper limit to give motor braking power */
 };
 
 /**
@@ -78,7 +78,7 @@ Braking_Handle_t BrakeHandle_M1 =
   */
 OTF_Handle_t OTFHandle_M1 =
 {
-  .hdir = 1, /* check for collinearity during detection phase */
+  .hdir = 0, /* check for collinearity during detection phase */
   .hSyncTRef = TREF_SYNC, /* Reference Iq during transition to speed control, can be set to the final ramp current in the drive parameters (or 70% of it) */
   .CoilShortSpeed = 10, /* speed in the syncrhonisation phase when turning the low-side is safe and be done to put motor to stationary position */
 //  .MaxSyncSpeed = OTF_MAX_SYNC_SPEED, /* Maximum speed for motor to synchronise */
@@ -444,6 +444,13 @@ __weak bool Regal_OTF_Exec( RevUpCtrl_Handle_t * pHandle, OTF_Handle_t *pOTFHand
           } /* check of coil shorting */
         } /* check of absolute speed */
       }/*hdir check for forward*/
+      else
+      {
+        if ((pHandle->hPhaseRemainingTicks < 10)&&(hObsSpeedUnitAbsValue>pOTFHandle->MaxSyncSpeed))
+        {
+          retVal = false;
+        }/* throw a start-up failure fault */
+      }/* hdir check for unstable speed reading*/
     }/*stage 1: synchronization phase*/
     
   } /* hPhaseRemainingTicks > 0 */

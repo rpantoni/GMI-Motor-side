@@ -16,7 +16,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "mc_tuning.h"
 
-#define REGAL_OTF 1u
+#define REGAL_OTF 1u /* enable/disable of Regal On-the-fly feature */
+#define FAULT_AUTOSTART 1u /* enable/disable auto-start when fault occurs */
 
 ////////////////////////////////////////////////////////////////////////////
 // RPa: Reference Bus Voltage Settings for non-regenerative braking
@@ -65,7 +66,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////
 //Braking and On-the-fly definitions for default value
-#define default_CONTROLLED_BRAKING      1u
+#define default_CONTROLLED_BRAKING      0u
 #define default_BK_VBUS_ADD             20 
 // RPa: the following hash defines are for the IMax trajectories to always be within the motor loss ellipse
 //      This has to be adapted for each motor class; for conservative setting: a=13, b=-6, c=1220
@@ -73,9 +74,9 @@
 #define default_BK_RAMP_b               -6
 #define default_BK_RAMP_c               1220
 #define default_OTF_DBEMFG              256
-#define default_OTF_MAX_BEMFG           320
-#define default_OTF_MIN_BEMFG           250
-#define default_OTF_MAX_SYNC_SPEED      120
+#define default_OTF_MAX_BEMFG           270
+#define default_OTF_MIN_BEMFG           200
+#define default_OTF_MAX_SYNC_SPEED      150
 #define default_OTF_MIN_SYNC_SPEED      30
 //////////////////////////////////////////////////////////
 

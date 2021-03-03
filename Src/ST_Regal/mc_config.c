@@ -435,7 +435,8 @@ void RegalSetting_Init(void){
   PIDSpeedHandle_M1.wLowerIntegralLimit = -(int32_t)A_IQMAX * (int32_t)SP_KIDIV;
   PIDSpeedHandle_M1.hUpperOutputLimit = (int16_t)A_IQMAX;
   PIDSpeedHandle_M1.hLowerOutputLimit = -(int16_t)A_IQMAX;
-  
+
+#if (REGAL_OTF==1)  
   RevUpControlM1.ParamsData[0].hDurationms = (uint16_t)A_PHASE1_DURATION;
   RevUpControlM1.ParamsData[0].hFinalMecSpeedUnit = (int16_t)(A_PHASE1_FINAL_SPEED_UNIT);
   RevUpControlM1.ParamsData[0].hFinalTorque = (int16_t)A_PHASE1_FINAL_CURRENT;
@@ -461,6 +462,32 @@ void RegalSetting_Init(void){
   RevUpControlM1.ParamsData[4].hFinalTorque = (int16_t)A_PHASE5_FINAL_CURRENT;
   RevUpControlM1.ParamsData[4].pNext = (void*)MC_NULL;
   
+#else
+  RevUpControlM1.ParamsData[0].hDurationms = (uint16_t)A_PHASE3_DURATION;
+  RevUpControlM1.ParamsData[0].hFinalMecSpeedUnit = (int16_t)(A_PHASE3_FINAL_SPEED_UNIT);
+  RevUpControlM1.ParamsData[0].hFinalTorque = (int16_t)A_PHASE3_FINAL_CURRENT;
+  RevUpControlM1.ParamsData[0].pNext = &RevUpControlM1.ParamsData[1];
+
+  RevUpControlM1.ParamsData[1].hDurationms = (uint16_t)A_PHASE4_DURATION;
+  RevUpControlM1.ParamsData[1].hFinalMecSpeedUnit = (int16_t)(A_PHASE4_FINAL_SPEED_UNIT);
+  RevUpControlM1.ParamsData[1].hFinalTorque = (int16_t)A_PHASE4_FINAL_CURRENT;
+  RevUpControlM1.ParamsData[1].pNext = &RevUpControlM1.ParamsData[2];
+    
+  RevUpControlM1.ParamsData[2].hDurationms = 0;
+  RevUpControlM1.ParamsData[2].hFinalMecSpeedUnit = (int16_t)(A_PHASE3_FINAL_SPEED_UNIT);
+  RevUpControlM1.ParamsData[2].hFinalTorque = (int16_t)A_PHASE3_FINAL_CURRENT;
+  RevUpControlM1.ParamsData[2].pNext = &RevUpControlM1.ParamsData[3];
+ 
+  RevUpControlM1.ParamsData[3].hDurationms = 0;
+  RevUpControlM1.ParamsData[3].hFinalMecSpeedUnit = (int16_t)(A_PHASE4_FINAL_SPEED_UNIT);
+  RevUpControlM1.ParamsData[3].hFinalTorque = (int16_t)A_PHASE4_FINAL_CURRENT;
+  RevUpControlM1.ParamsData[3].pNext = &RevUpControlM1.ParamsData[4];
+    
+  RevUpControlM1.ParamsData[4].hDurationms = 0;
+  RevUpControlM1.ParamsData[4].hFinalMecSpeedUnit = (int16_t)(A_PHASE5_FINAL_SPEED_UNIT);
+  RevUpControlM1.ParamsData[4].hFinalTorque = (int16_t)A_PHASE5_FINAL_CURRENT;
+  RevUpControlM1.ParamsData[4].pNext = (void*)MC_NULL;
+#endif 
   
   //MAX_APPLICATION_SPEED_RPM parameter dependance => MAX_BEMF_VOLTAGE parameter dependance => C3
   STO_PLL_M1.hC3 = (int32_t)((((int16_t)F1)* (uint16_t)((MAX_APPLICATION_SPEED_RPM * 1.2 * MOTOR_VOLTAGE_CONSTANT*SQRT_2)/(1000u*SQRT_3)))/(LS*MAX_CURRENT*TF_REGULATION_RATE));     
