@@ -40,7 +40,7 @@ uint64_t maxModuleTimeUsage = 0;
 uint8_t  maxTimeIRQ_ModuleId = 255;
 uint64_t maxIRQTimeUsage = 0;
 
-
+static uint8_t reallocError = 0; 
 // REVIEW: Placement
 
 /* Content ---------------------------------------------------------------------------------------------------------------------*/
@@ -233,6 +233,12 @@ void HAL_SYSTICK_Callback(void) { //Using SysTick_Handler() instead //SPA
 uint64_t getSysCount(void) 
 {
   return tickCounter; 
+}
+
+uint8_t reallocErrorINC(uint8_t addCount)
+{
+  reallocError += addCount;
+  return(reallocError);  
 }
 
 // void Watchdog_Initialize(uint8_t timeout_u8) {

@@ -16,7 +16,7 @@
 /* Includes --------------------------------------------------------------------------------------------------------------------*/
 #include <stdbool.h>
 #include <stdint.h>
-
+#include "main.h"
 //#include "stm32f4xx_hal.h" 
 #include "stm32f3xx_hal.h" //SPA
 
@@ -46,7 +46,6 @@ extern "C" {
 //static uint64_t tickCounter = 0; //SPA
 
 /* global parameters -----------------------------------------------------------------------------------------------------------*/  
-static uint8_t reallocError = 0;                                        //Heap memory allocation error counter   //house keeping code
 
 /* User parameters -------------------------------------------------------------------------------------------------------------*/
 // General
@@ -685,6 +684,15 @@ void setupSoftwareIRQ(uint8_t SENDER_MODULE_ID, uint8_t RECEIVER_MODULE_ID, uint
   ********************************************************************************************************************************
   */
 uint16_t Calculate_CRC(uint16_t BufSize, unsigned char* aDataBuf);
+
+/**
+  ********************************************************************************************************************************
+  * @brief   Danamic memory handling
+  * @details 
+  * @param  
+  ********************************************************************************************************************************
+  */
+uint8_t reallocErrorINC(uint8_t addCount);
 
 #ifdef __cplusplus
 }

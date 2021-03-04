@@ -22,6 +22,7 @@
 #include "ab_module_Mc_StateMachine.h"
 #include "mc_tasks.h"
 #include "mc_type.h"
+#include "scheduler.h"
 
 extern ProcessInfo processInfoTable[];
 
@@ -113,7 +114,7 @@ uint8_t moduleFlashUpdateCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, ui
           usart2Control_FlashUpdateCmd = (Usart2_Control*) ((*(processInfoTable[Usart2index].Sched_ModuleData.p_masterSharedMem_u32)).p_ramBuf_u8);
           uint8_t Mc_StateMachineindex  = getProcessInfoIndex(MODULE_MC_STATEMACHINE);              //return Process index from processInfo array with the MC_statemachine module
           module_StateMachineControl_FlashUpdateCmd = (Module_StateMachineControl*) ((*(processInfoTable[Mc_StateMachineindex].Sched_ModuleData.p_masterSharedMem_u32)).p_ramBuf_u8);
-
+          if((protocolBuf_FlashUpdateCmd = (unsigned char*) malloc(100)) == NULL) reallocErrorINC(1);    
           flashBlockWrDat.flashWrState = idle;
           returnStage = RUN_APP ;
           break;
@@ -132,11 +133,11 @@ uint8_t moduleFlashUpdateCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, ui
               case wait4NextBlock: 
               case AppSideRebootAck: 
                 {   //Error if new frame happen in between the stateMachine process!!!!!
-                    if((protocolBuf_FlashUpdateCmd = (unsigned char*) realloc(protocolBuf_FlashUpdateCmd,DataLen2)) == NULL) reallocError++;     
+                    if((protocolBuf_FlashUpdateCmd = (unsigned char*) realloc(protocolBuf_FlashUpdateCmd,DataLen2)) == NULL) reallocErrorINC(1);     
                     RingBuf_Observe((*usart2Control_FlashUpdateCmd).seqMemRXG4H_u32, protocolBuf_FlashUpdateCmd, 0, &DataLen2);  
                     //calculate the total number of frame
                     DataLen2 = ((unsigned int)protocolBuf_FlashUpdateCmd[1] & 0x3F) + (unsigned int)UniHeaderlen;
-                    if((protocolBuf_FlashUpdateCmd = (unsigned char*) realloc(protocolBuf_FlashUpdateCmd,DataLen2)) == NULL) reallocError++;     //allocate the right frame size of memory for buffer
+                    if((protocolBuf_FlashUpdateCmd = (unsigned char*) realloc(protocolBuf_FlashUpdateCmd,DataLen2)) == NULL) reallocErrorINC(1);     //allocate the right frame size of memory for buffer
                     RingBuf_ReadBlock((*usart2Control_FlashUpdateCmd).seqMemRXG4H_u32, protocolBuf_FlashUpdateCmd, &DataLen2); //extract the whole frame
                     break;
                 }
@@ -214,7 +215,7 @@ uint8_t moduleFlashUpdateCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, ui
           {
             if(flashBlockWrDat.flashWrState != idle) flashBlkWriteStateMachine_Run(module_id_u8);  //still in block flash stateMachine 
           }
-      //    if((protocolBuf_FlashUpdateCmd = (unsigned char*) realloc(protocolBuf_FlashUpdateCmd,1)) == NULL) reallocError++;  
+      //    if((protocolBuf_FlashUpdateCmd = (unsigned char*) realloc(protocolBuf_FlashUpdateCmd,1)) == NULL) reallocErrorINC(1);  
           returnStage = RUN_APP;
           break;
         }
