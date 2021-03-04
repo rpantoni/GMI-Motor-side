@@ -10,3 +10,4 @@ EWARM/4.5kW_GMI_DecStar/Obj/.ninja_log
 *.hex
 *.browse
 *.pbd
+*.pbi

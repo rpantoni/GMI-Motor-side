@@ -1,87 +1,87 @@
-"C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_dma.c"
+"C:\Users\610120299\Documents\GitHub\GMI-Motor-side\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_dma.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -funsigned-char
 -MD
 -MF
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\4.5kW_GMI_DecStar\Obj\stm32f3xx_hal_dma.pbi.dep
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\4.5kW_GMI_DecStar\Obj\stm32f3xx_hal_dma.pbi.dep
 -o
 stm32f3xx_hal_dma.pbi
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\Drivers\STM32F3xx_HAL_Driver\Src
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\Drivers\STM32F3xx_HAL_Driver\Src
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM/../Inc\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../Inc\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM/../Drivers/STM32F3xx_HAL_Driver/Inc\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../Drivers/STM32F3xx_HAL_Driver/Inc\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM/../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/F3xx/Inc\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/F3xx/Inc\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/UILibrary/Inc\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/UILibrary/Inc\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/SystemDriveParams\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/SystemDriveParams\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM/../Drivers/CMSIS/Device/ST/STM32F3xx/Include\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../Drivers/CMSIS/Device/ST/STM32F3xx/Include\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM/../Drivers/CMSIS/Include\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../Drivers/CMSIS/Include\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM/../Drivers/CMSIS/DSP/Include\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../Drivers/CMSIS/DSP/Include\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Drivers\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\..\FlexMouse\Drivers\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Features\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\..\FlexMouse\Features\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Kernel\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\..\FlexMouse\Kernel\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Memory\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\..\FlexMouse\Memory\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Regal\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\..\FlexMouse\Regal\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\UniversalProtocol\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\..\FlexMouse\UniversalProtocol\
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\..\FlexMouse\Motor\
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\..\FlexMouse\Motor\
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\Inc
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\Inc
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\Drivers\STM32F3xx_HAL_Driver\Inc
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\Drivers\STM32F3xx_HAL_Driver\Inc
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\Drivers\STM32F3xx_HAL_Driver\Inc\Legacy
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\Drivers\STM32F3xx_HAL_Driver\Inc\Legacy
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\MCSDK_v5.4.4-Full\MotorControl\MCSDK\MCLib\Any\Inc
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\MCSDK_v5.4.4-Full\MotorControl\MCSDK\MCLib\Any\Inc
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\MCSDK_v5.4.4-Full\MotorControl\MCSDK\MCLib\F3xx\Inc
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\MCSDK_v5.4.4-Full\MotorControl\MCSDK\MCLib\F3xx\Inc
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\MCSDK_v5.4.4-Full\MotorControl\MCSDK\UILibrary\Inc
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\MCSDK_v5.4.4-Full\MotorControl\MCSDK\UILibrary\Inc
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\MCSDK_v5.4.4-Full\MotorControl\MCSDK\SystemDriveParams
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\MCSDK_v5.4.4-Full\MotorControl\MCSDK\SystemDriveParams
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\Drivers\CMSIS\Device\ST\STM32F3xx\Include
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\Drivers\CMSIS\Device\ST\STM32F3xx\Include
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\Drivers\CMSIS\Include
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\Drivers\CMSIS\Include
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\Drivers\CMSIS\DSP\Include
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\Drivers\CMSIS\DSP\Include
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\FlexMouse\Drivers
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\FlexMouse\Drivers
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\FlexMouse\Features
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\FlexMouse\Features
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\FlexMouse\Kernel
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\FlexMouse\Kernel
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\FlexMouse\Memory
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\FlexMouse\Memory
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\FlexMouse\Regal
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\FlexMouse\Regal
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\FlexMouse\UniversalProtocol
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\FlexMouse\UniversalProtocol
 -I
-C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\FlexMouse\Motor
+C:\Users\610120299\Documents\GitHub\GMI-Motor-side\FlexMouse\Motor
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0

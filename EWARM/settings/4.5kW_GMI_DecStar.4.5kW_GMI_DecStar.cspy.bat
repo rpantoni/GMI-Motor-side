@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.general.xcl" --backend -f "C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.general.xcl" --backend -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\610120299\Documents\Local Checkout\trunk\Pam_20210127\4.5kW_GMI_DecStar\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.driver.xcl" 
 
 @echo off 
 :end
