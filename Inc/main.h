@@ -82,16 +82,12 @@ void Error_Handler(void);
 #define M1_CURR_AMPL_V_GPIO_Port GPIOA
 #define DBG_DAC_CH1_Pin LL_GPIO_PIN_4
 #define DBG_DAC_CH1_GPIO_Port GPIOA
-#define M1_HALL_H1_Pin LL_GPIO_PIN_5
-#define M1_HALL_H1_GPIO_Port GPIOA
 #define M1_CURR_AMPL_W_Pin LL_GPIO_PIN_6
 #define M1_CURR_AMPL_W_GPIO_Port GPIOA
 #define M1_BUS_VOLTAGE_Pin LL_GPIO_PIN_0
 #define M1_BUS_VOLTAGE_GPIO_Port GPIOB
 #define M1_TEMPERATURE_Pin LL_GPIO_PIN_1
 #define M1_TEMPERATURE_GPIO_Port GPIOB
-#define M1_HALL_H3_Pin LL_GPIO_PIN_10
-#define M1_HALL_H3_GPIO_Port GPIOB
 #define M1_OVP_Pin LL_GPIO_PIN_12
 #define M1_OVP_GPIO_Port GPIOB
 #define M1_PWM_UL_Pin LL_GPIO_PIN_13
@@ -110,8 +106,6 @@ void Error_Handler(void);
 #define M1_OCP_GPIO_Port GPIOA
 #define LED_Debug_Pin LL_GPIO_PIN_15
 #define LED_Debug_GPIO_Port GPIOA
-#define M1_HALL_H2_Pin LL_GPIO_PIN_3
-#define M1_HALL_H2_GPIO_Port GPIOB
 #define UART_TX_Pin LL_GPIO_PIN_6
 #define UART_TX_GPIO_Port GPIOB
 #define UART_RX_Pin LL_GPIO_PIN_7

@@ -266,41 +266,6 @@ STO_Handle_t STO_M1 =
   .pFctSTO_SpeedReliabilityCheck = &STO_PLL_IsVarianceTight                              
 };
 
-/**
-  * @brief  SpeedNPosition sensor parameters Motor 1 - HALL
-  */
-
-HALL_Handle_t HALL_M1 =
-{
-  ._Super = {
-  //  .bElToMecRatio                     =	POLE_PAIR_NUM,               
-//   .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.15*MAX_APPLICATION_SPEED_UNIT),
-//   .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-    .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,            
-    .hMaxReliableMecAccelUnitP         =	65535,                             
-//    .hMeasurementFrequency             =	(uint16_t) ((uint32_t)(PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE*PWM_FREQ_SCALING)),
-    .DPPConvFactor                     =  DPP_CONV_FACTOR,       
-  }, 
-//  .SensorPlacement     = HALL_SENSORS_PLACEMENT,
-//  .PhaseShift          = (int16_t)(HALL_PHASE_SHIFT * 65536/360),
-  .SpeedSamplingFreqHz = MEDIUM_FREQUENCY_TASK_RATE,
-  .SpeedBufferSize     = HALL_AVERAGING_FIFO_DEPTH, 
- .TIMClockFreq       = HALL_TIM_CLK,         
- .TIMx                = TIM2, 
- 
- .ICx_Filter          = M1_HALL_IC_FILTER,
- 
- .PWMFreqScaling      = PWM_FREQ_SCALING,
- .HallMtpa            = HALL_MTPA,  
-
- .H1Port             =  M1_HALL_H1_GPIO_Port, 
- .H1Pin              =  M1_HALL_H1_Pin,       
- .H2Port             =  M1_HALL_H2_GPIO_Port, 
- .H2Pin              =  M1_HALL_H2_Pin,       
- .H3Port             =  M1_HALL_H3_GPIO_Port, 
- .H3Pin              =  M1_HALL_H3_Pin,       									 
-};
-
 ICL_Handle_t ICL_M1 =
 {
   .ICLstate			=	ICL_INACTIVE,						
@@ -413,8 +378,6 @@ void RegalSetting_Init(void){
   VirtualSpeedSensorM1._Super.bElToMecRatio = A_POLE_PAIR_NUM;
   
   STO_PLL_M1._Super.bElToMecRatio =  A_POLE_PAIR_NUM;
-  
-  HALL_M1._Super.bElToMecRatio =  A_POLE_PAIR_NUM;
   
   SpeednTorqCtrlM1.MaxPositiveTorque = (int16_t)A_NOMINAL_CURRENT;		 
   SpeednTorqCtrlM1.MinNegativeTorque =	-(int16_t)A_NOMINAL_CURRENT;   
@@ -533,15 +496,6 @@ void RegalSetting_Init(void){
   STO_CR_M1.hC2 =(int32_t) D_CORD_GAIN1;
   STO_CR_M1.hC4 =(int32_t) D_CORD_GAIN2;
 #endif 
-  
-#ifdef HALL_M1
-  HALL_M1.SensorPlacement     = D_HALL_SENSORS_PLACEMENT;
-  HALL_M1.PhaseShift          = (int16_t)(D_HALL_PHASE_SHIFT * 65536/360);
-  HALL_M1._Super.hMeasurementFrequency = (uint16_t) ((uint32_t)(A_PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE*PWM_FREQ_SCALING)); // TF_REGULATION_RATE
-  HALL_M1._Super.hMaxReliableMecSpeedUnit = (uint16_t)(1.15*((A_MAX_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM));
-  HALL_M1._Super.hMinReliableMecSpeedUnit = (uint16_t)(((MIN_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM));
-
-#endif
 
 
 }

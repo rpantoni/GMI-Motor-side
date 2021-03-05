@@ -37,16 +37,6 @@
 #define MEAS_ERRORS_BEFORE_FAULTS       3 /*!< Number of speed  
                                                              measurement errors before 
                                                              main sensor goes in fault */
-/****** Hall sensors ************/ 
-#define HALL_MEAS_ERRORS_BEFORE_FAULTS  3 /*!< Number of failed   
-                                                           derived class specific speed 
-                                                           measurements before main sensor  
-                                                           goes in fault */
-
-#define HALL_AVERAGING_FIFO_DEPTH        6 /*!< depth of the FIFO used to 
-                                                           average mechanical speed in 
-                                                           0.1Hz resolution */  
-#define HALL_MTPA  false                                                            
 /****** State Observer + PLL ****/
 #define VARIANCE_THRESHOLD              0.1 /*!<Maximum accepted 
                                                             variance on speed 
