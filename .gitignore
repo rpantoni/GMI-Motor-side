@@ -1,4 +1,3 @@
-
 *.wsdt
 *.dep
 *.lst
@@ -6,8 +5,10 @@
 *.o
 *.pbi
 *.xcl
-EWARM/4.5kW_GMI_DecStar/Obj/.ninja_log
 *.hex
 *.browse
 *.pbd
-*.pbi
+*.map
+*.out
+*.ninja_log
+*.pbw
