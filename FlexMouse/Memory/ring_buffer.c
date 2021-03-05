@@ -285,7 +285,7 @@ static uint8_t RingBuf_IncTail(Ring_Buf_Handle this_ring_buf_u32) {
   ********************************************************************************************************************************
   */
 static uint8_t *RingBuf_GetPhysicalAddressOfHeadPlusOffset(Ring_Buf_Handle this_ring_buf_u32, uint32_t offset_u32) {
-    uint32_t diff;
+    int32_t diff;
     RingBuf_CalculateAvailableSpace(this_ring_buf_u32);
     if ((RingBuf_IsEmpty(this_ring_buf_u32)) || (RingBuf_GetUsedNumOfElements(this_ring_buf_u32) < offset_u32)) 
     {
