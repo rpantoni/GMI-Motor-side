@@ -71,7 +71,7 @@ typedef enum
 }AppStates;
 
 Module_StateMachineControl*  module_StateMachineControl_FlashRegisterCmd;
-unsigned char* protocolBuf_FlashRegisterCmd ;
+unsigned char protocolBuf_FlashRegisterCmd[100];
 uint16_t ResendPeriod = 0;
 uint16_t regNum =0xffff;
   
@@ -87,7 +87,7 @@ uint8_t moduleFlashRegisterCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
           usart2Control_FlashRegisterCmd = (Usart2_Control*) ((*(processInfoTable[Usart2index].Sched_ModuleData.p_masterSharedMem_u32)).p_ramBuf_u8);
           uint8_t Mc_StateMachineindex  = getProcessInfoIndex(MODULE_MC_STATEMACHINE);              //return Process index from processInfo array with the MC_statemachine module
           module_StateMachineControl_FlashRegisterCmd = (Module_StateMachineControl*) ((*(processInfoTable[Mc_StateMachineindex].Sched_ModuleData.p_masterSharedMem_u32)).p_ramBuf_u8);
-          if((protocolBuf_FlashRegisterCmd = (unsigned char*) malloc(100)) == NULL) reallocErrorINC(1);  
+          // if((protocolBuf_FlashRegisterCmd = (unsigned char*) malloc(100)) == NULL) reallocErrorINC(1);  
           returnStage = RUN_APP ;
           break;
         }       
@@ -96,11 +96,11 @@ uint8_t moduleFlashRegisterCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
           unsigned int DataLen2 = (unsigned int)UniHeaderlen;
           if(RingBuf_GetUsedNumOfElements((*usart2Control_FlashRegisterCmd).seqMemRXG4L_u32) >= DataLen2 )
           { /** ------------------------------ pre-determine what state is in for Rx data is valid or not valid between blockmode transfer -------------------------**/
-            if((protocolBuf_FlashRegisterCmd = (unsigned char*) realloc(protocolBuf_FlashRegisterCmd,DataLen2)) == NULL) reallocErrorINC(1);     
+            // if((protocolBuf_FlashRegisterCmd = (unsigned char*) realloc(protocolBuf_FlashRegisterCmd,DataLen2)) == NULL) reallocErrorINC(1);     
             RingBuf_Observe((*usart2Control_FlashRegisterCmd).seqMemRXG4L_u32, protocolBuf_FlashRegisterCmd, 0, &DataLen2);  
             //calculate the total number of frame
             DataLen2 = ((unsigned int)protocolBuf_FlashRegisterCmd[1] & 0x3F) + (unsigned int)UniHeaderlen;
-            if((protocolBuf_FlashRegisterCmd = (unsigned char*) realloc(protocolBuf_FlashRegisterCmd,DataLen2)) == NULL) reallocErrorINC(1);     //allocate the right frame size of memory for buffer
+            // if((protocolBuf_FlashRegisterCmd = (unsigned char*) realloc(protocolBuf_FlashRegisterCmd,DataLen2)) == NULL) reallocErrorINC(1);     //allocate the right frame size of memory for buffer
             RingBuf_ReadBlock((*usart2Control_FlashRegisterCmd).seqMemRXG4L_u32, protocolBuf_FlashRegisterCmd, &DataLen2); //extract the whole fram
             /**---------------------------------------------- decode and perform the CMD function ------------------------------------------**/
             switch((FlashRegisterCMD)protocolBuf_FlashRegisterCmd[2])

@@ -31,7 +31,7 @@ enum AppStates {
 };
 
 //uint16_t adcFilterVal = 0;
-unsigned char* protocolBuf_ShortCmd ;
+unsigned char protocolBuf_ShortCmd[100] ;
 //^**Tips: APPs/Drivers adding process example step7 (Add the Additional funtion itself)
 uint8_t moduleShortCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, uint8_t next_State_u8,
                         uint8_t irq_id_u8)                 
@@ -47,7 +47,7 @@ uint8_t moduleShortCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, uint8_t 
           usart2Control_ShortCmd = (Usart2_Control*) ((*(processInfoTable[Usart2index].Sched_ModuleData.p_masterSharedMem_u32)).p_ramBuf_u8);
           uint8_t Mc_StateMachineindex  = getProcessInfoIndex(MODULE_MC_STATEMACHINE);              //return Process index from processInfo array with the MC_statemachine module
           module_StateMachineControl_ShortCmd = (Module_StateMachineControl*) ((*(processInfoTable[Mc_StateMachineindex].Sched_ModuleData.p_masterSharedMem_u32)).p_ramBuf_u8);
-          if((protocolBuf_ShortCmd = (unsigned char*) malloc(100)) == NULL) reallocErrorINC(1);         
+          //if((protocolBuf_ShortCmd = (unsigned char*) malloc(100)) == NULL) reallocErrorINC(1);         
           returnStage = RUN_APP ;
           break;
         }       
@@ -56,11 +56,11 @@ uint8_t moduleShortCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, uint8_t 
           unsigned int DataLen2 = (unsigned int)UniHeaderlen;
           if(RingBuf_GetUsedNumOfElements((*usart2Control_ShortCmd).seqMemRXG1_2_u32) >= DataLen2 )
           {        
-            if((protocolBuf_ShortCmd = (unsigned char*) realloc(protocolBuf_ShortCmd,DataLen2)) == NULL) reallocErrorINC(1);     
+           // if((protocolBuf_ShortCmd = (unsigned char*) realloc(protocolBuf_ShortCmd,DataLen2)) == NULL) reallocErrorINC(1);     
             RingBuf_Observe((*usart2Control_ShortCmd).seqMemRXG1_2_u32, protocolBuf_ShortCmd, 0, &DataLen2);  
             //calculate the total number of frame
             DataLen2 = ((unsigned int)protocolBuf_ShortCmd[1] & 0x3F) + (unsigned int)UniHeaderlen;
-            if((protocolBuf_ShortCmd = (unsigned char*) realloc(protocolBuf_ShortCmd,DataLen2)) == NULL) reallocErrorINC(1);     //allocate the right frame size of memory for buffer
+           // if((protocolBuf_ShortCmd = (unsigned char*) realloc(protocolBuf_ShortCmd,DataLen2)) == NULL) reallocErrorINC(1);     //allocate the right frame size of memory for buffer
             RingBuf_ReadBlock((*usart2Control_ShortCmd).seqMemRXG1_2_u32, protocolBuf_ShortCmd, &DataLen2); //extract the whole frame
             //decode and perform the CMD function
             switch(protocolBuf_ShortCmd[2])
@@ -103,7 +103,7 @@ uint8_t moduleShortCmd_u32(uint8_t module_id_u8, uint8_t prev_state_u8, uint8_t 
             }
 
           }
-          if((protocolBuf_ShortCmd = (unsigned char*) realloc(protocolBuf_ShortCmd,1)) == NULL) reallocErrorINC(1);;
+         // if((protocolBuf_ShortCmd = (unsigned char*) realloc(protocolBuf_ShortCmd,1)) == NULL) reallocErrorINC(1);;
           returnStage = RUN_APP;
           break;
         }

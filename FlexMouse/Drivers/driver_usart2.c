@@ -30,9 +30,9 @@ uint16_t uwCRCValue = 0;
 
 static uint8_t dataLen = 0;                                         //length of data byte/s plus CRC expected
 uint8_t UniProtocolState = protocolstart;
-unsigned char* protocolBuf;
-unsigned char* headerFramebuf;
-unsigned char* wholeFramebuf;
+unsigned char protocolBuf[100];
+unsigned char headerFramebuf[100];
+unsigned char wholeFramebuf[100];
 
 /**
   * @brief USART2 Initialization Function
@@ -93,9 +93,9 @@ void MX_USART2_UART_Init(void)
   }
   LL_USART_EnableIT_RXNE(USART2);
   /* USER CODE BEGIN USART2_Init 2 */
-  if((protocolBuf = (unsigned char*) malloc(80)) == NULL) reallocErrorINC(1);    
-  if((headerFramebuf = (unsigned char*) malloc(80)) == NULL) reallocErrorINC(1);  
-  if((wholeFramebuf = (unsigned char*) malloc(80)) == NULL) reallocErrorINC(1);   
+  //if((protocolBuf = (unsigned char*) malloc(80)) == NULL) reallocErrorINC(1);    
+  //if((headerFramebuf = (unsigned char*) malloc(80)) == NULL) reallocErrorINC(1);  
+  //if((wholeFramebuf = (unsigned char*) malloc(80)) == NULL) reallocErrorINC(1);   
 
 
   /* USER CODE END USART2_Init 2 */
@@ -136,7 +136,6 @@ void USART2_CharReception_Callback(void)
 /******************* variable for Usart2 TX interrupt **************************/
 __IO uint8_t indexTx = 0;
 uint8_t ubSizeToSend = 0;
-unsigned char* wholeFramebuf;
 /*******************************************************************************/
 /**
   * @brief  Function called for achieving next TX Byte sending
@@ -199,9 +198,9 @@ void protocolHeaderfetch(void)
           { //sync byte not found or error, then clear the first 5 bytes
             SyncPosition = UniHeaderlen;                                                                // this will clear all 5 byte                                       
           }
-          if((protocolBuf = (unsigned char*) realloc(protocolBuf,SyncPosition)) == NULL) reallocErrorINC(1);
+         // if((protocolBuf = (unsigned char*) realloc(protocolBuf,SyncPosition)) == NULL) reallocErrorINC(1);
           RingBuf_ReadBlock((*usart2Control).seqMem_InternalPipe_u32, protocolBuf, &SyncPosition);                          //truncate any char before SYNC char 
-          if((protocolBuf = (unsigned char*)realloc(protocolBuf,1)) == NULL) reallocErrorINC(1);
+         // if((protocolBuf = (unsigned char*)realloc(protocolBuf,1)) == NULL) reallocErrorINC(1);
           usart2CaptureLen = UniHeaderlen; 
           UniProtocolState = protocolstart;                                                             // still to back here next stage for complete header frame 
           break;
@@ -268,7 +267,7 @@ void protocolHeaderfetch(void)
       }
     case frameCRC:
       {
-        if((protocolBuf = (unsigned char*) realloc(protocolBuf,usart2CaptureLen)) == NULL) reallocErrorINC(1);        
+        // if((protocolBuf = (unsigned char*) realloc(protocolBuf,usart2CaptureLen)) == NULL) reallocErrorINC(1);        
         unsigned int DataLen2 = (unsigned int)usart2CaptureLen;
         RingBuf_Observe((*usart2Control).seqMem_InternalPipe_u32, protocolBuf, 0, &DataLen2);                             //copy the whole frame into buffer
         uint16_t frameCRC = (((uint16_t)protocolBuf[DataLen2 - 2]) << 8) + ((uint16_t)protocolBuf[DataLen2 - 1]) ;
@@ -278,7 +277,7 @@ void protocolHeaderfetch(void)
         { //CRC match put whole frame into RX pipe      
           //decode from the CMD of group(1-2, 3 or 4 )
          // RingBuf_WriteBlock((*usart2Control).seqMemRX_u32, protocolBuf, &DataLen2);                                //put fully checked (Valid) Rx frame into Rx Pipe
-          if((protocolBuf[3]) && (protocolBuf[2] != 0x3f))                                              //if auto ACK
+          // if((protocolBuf[3]) && (protocolBuf[2] != 0x3f))                                              //if auto ACK
           {
             unsigned char ackTx[] = {0x55, 0x00, 0x3F, protocolBuf[3], 0x00, 0xCC, 0xCC};
             unsigned int TxLen = sizeof(ackTx);
@@ -358,7 +357,7 @@ void protocolHeaderfetch(void)
         }                                                                  
 
         RingBuf_ReadBlock((*usart2Control).seqMem_InternalPipe_u32, protocolBuf, &DataLen2);                              //extract the whole frame         
-        if((protocolBuf = (unsigned char*) realloc(protocolBuf,1)) == NULL) reallocErrorINC(1);                                          //free heap only leave 1 byte 
+        // if((protocolBuf = (unsigned char*) realloc(protocolBuf,1)) == NULL) reallocErrorINC(1);                                          //free heap only leave 1 byte 
                 
         usart2CaptureLen = UniHeaderlen; 
         UniProtocolState = protocolstart;    
@@ -401,7 +400,7 @@ uint8_t TxProcess(void)
 { //process Tx frame in Tx pipe
   int txHeaderSize = UniHeaderlen;
   uint8_t currentFrameID = 0;
-  if((headerFramebuf = (unsigned char*) realloc(headerFramebuf, txHeaderSize)) == NULL) reallocErrorINC(1);
+  // if((headerFramebuf = (unsigned char*) realloc(headerFramebuf, txHeaderSize)) == NULL) reallocErrorINC(1);
   unsigned int DataLenTx = (unsigned int)txHeaderSize;
   if(indexTx == 0)
   {
@@ -422,7 +421,7 @@ uint8_t TxProcess(void)
       { /**check this is auto-ack frame  **/
         if(!IsAckBufFull())
         {
-          if((headerFramebuf = (unsigned char*) realloc(headerFramebuf, DataLenTx)) == NULL) reallocErrorINC(1);       
+          // if((headerFramebuf = (unsigned char*) realloc(headerFramebuf, DataLenTx)) == NULL) reallocErrorINC(1);       
           RingBuf_Observe((*usart2Control).seqMemTX_u32, headerFramebuf, 0, &DataLenTx);                      //get the whole frame to capture the second last byte of module ID data in the frame
           currentFrameID = AckDatSet((uint8_t)headerFramebuf[2], 0, (uint8_t)headerFramebuf[DataLenTx - 2]);  //put the current Auto Ack frame data to UniversalAckInfo for timout or auto dismiss  
         }
@@ -430,12 +429,12 @@ uint8_t TxProcess(void)
         { //if this is auto ack frame but autoACk UniversalAckInfo is full
           //then wait until the buffer clear 
           /**!!!!!!!!!!!!!!!!!! The communication may slow down alot if completely no reply by the other end, need to be carefull !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**/
-          if((headerFramebuf = (unsigned char*) realloc(headerFramebuf, 1)) == NULL) reallocErrorINC(1);                            //free heap only leave 1 byte 
+          // if((headerFramebuf = (unsigned char*) realloc(headerFramebuf, 1)) == NULL) reallocErrorINC(1);                            //free heap only leave 1 byte 
           return 1;               //Tx buffer full can't accept anymore frame
         }
       }
-      if((headerFramebuf = (unsigned char*) realloc(headerFramebuf, 1)) == NULL) reallocErrorINC(1);                            //free heap only leave 1 byte 
-      if((wholeFramebuf = (unsigned char*) realloc(wholeFramebuf, DataLenTx)) == NULL) reallocErrorINC(1);       
+      // if((headerFramebuf = (unsigned char*) realloc(headerFramebuf, 1)) == NULL) reallocErrorINC(1);                            //free heap only leave 1 byte 
+      // if((wholeFramebuf = (unsigned char*) realloc(wholeFramebuf, DataLenTx)) == NULL) reallocErrorINC(1);       
       RingBuf_ReadBlock((*usart2Control).seqMemTX_u32, wholeFramebuf, &DataLenTx);             //copy the complete frame into buffer
       wholeFramebuf[HeaderSize - 3] = (~TxSyncChr & 0xf0) + (wholeFramebuf[HeaderSize - 3] & 0xf); 
       wholeFramebuf[HeaderSize - 4] = currentFrameID; 
