@@ -114,14 +114,11 @@ mc_config.pbi: \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc/trajectory_ctrl.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc/enc_align_ctrl.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc/encoder_speed_pos_fdbk.h \
-  C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/UILibrary/Inc\usart_frame_communication_protocol.h \
-  C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/UILibrary/Inc/frame_communication_protocol.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/UILibrary/Inc\dac_common_ui.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../Inc\user_interface.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/UILibrary/Inc\dac_ui.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/UILibrary/Inc/dac_common_ui.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc\inrush_current_limiter.h \
-  C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc\hall_speed_pos_fdbk.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc\ramp_ext_mngr.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc\circle_limitation.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc\sto_speed_pos_fdbk.h \
@@ -131,4 +128,5 @@ mc_config.pbi: \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\..\FlexMouse\Kernel\structured_memory.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../Inc\pmsm_motor_parameters.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../Inc\drive_parameters.h \
+  C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM/../MCSDK_v5.4.4-Full/MotorControl/MCSDK/MCLib/Any/Inc\hall_speed_pos_fdbk.h \
   C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\..\FlexMouse\Motor\regal_mc_lib.h
