@@ -32,9 +32,6 @@
 #include "pqd_motor_power_measurement.h"
  #include "user_interface.h"
 
-//#include "motor_control_protocol.h"
-#include "usart_frame_communication_protocol.h"
-
 #include "dac_common_ui.h"
 #include "dac_ui.h"
 
@@ -69,8 +66,6 @@ extern DOUT_handle_t ICLDOUTParamsM1;
 extern UI_Handle_t UI_Params;
 
 extern DAC_UI_Handle_t DAC_UI_Params;
-
-extern UFCP_Handle_t pUSART;
 
 /* USER CODE BEGIN Additional extern */
 void RegalSetting_Init(void);   //Regal user configurable parameters redirection & init table

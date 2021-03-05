@@ -365,13 +365,6 @@ DOUT_handle_t ICLDOUTParamsM1 =
   .bDOutputPolarity  = DOUT_ACTIVE_LOW		
 };
 
-UFCP_Handle_t pUSART =
-{
-  ._Super.RxTimeout = 0,
-  .USARTx = USART1,
-       
-};
-
 /**------------- Regal flash setting redirection for all ST motor libraries user updatable parameters  -------*/
 void RegalSetting_Init(void){
   

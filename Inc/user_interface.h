@@ -31,7 +31,6 @@
 #include "mc_type.h"
 #include "mc_interface.h"
 #include "mc_tuning.h"
-#include "state_machine.h"
 
 /** @addtogroup MCSDK
   * @{

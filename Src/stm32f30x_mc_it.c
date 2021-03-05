@@ -58,8 +58,6 @@
 void ADC1_2_IRQHandler(void);
 void TIMx_UP_M1_IRQHandler(void);
 void TIMx_BRK_M1_IRQHandler(void);
-void SPD_TIM_M1_IRQHandler(void);
-void USART_IRQHandler(void);
 void HardFault_Handler(void);
 void SysTick_Handler(void);
 
@@ -138,103 +136,6 @@ void TIMx_BRK_M1_IRQHandler(void)
 }
 
 /**
-  * @brief  This function handles TIMx global interrupt request for M1 Speed Sensor.
-  * @param  None
-  * @retval None
-  */
-void SPD_TIM_M1_IRQHandler(void)
-{
-  /* USER CODE BEGIN SPD_TIM_M1_IRQn 0 */
-
-  /* USER CODE END SPD_TIM_M1_IRQn 0 */ 
-  
-  /* HALL Timer Update IT always enabled, no need to check enable UPDATE state */
-  if (LL_TIM_IsActiveFlag_UPDATE(HALL_M1.TIMx) != 0)
-  {
-    LL_TIM_ClearFlag_UPDATE(HALL_M1.TIMx);
-    HALL_TIMx_UP_IRQHandler(&HALL_M1);
-    /* USER CODE BEGIN M1 HALL_Update */
-
-    /* USER CODE END M1 HALL_Update   */ 
-  }
-  else
-  {
-    /* Nothing to do */
-  }
-  /* HALL Timer CC1 IT always enabled, no need to check enable CC1 state */
-  if (LL_TIM_IsActiveFlag_CC1 (HALL_M1.TIMx)) 
-  {
-    LL_TIM_ClearFlag_CC1(HALL_M1.TIMx);
-    HALL_TIMx_CC_IRQHandler(&HALL_M1);
-    /* USER CODE BEGIN M1 HALL_CC1 */
-
-    /* USER CODE END M1 HALL_CC1 */ 
-  }
-  else
-  {
-  /* Nothing to do */
-  }
-  /* USER CODE BEGIN SPD_TIM_M1_IRQn 1 */
-
-  /* USER CODE END SPD_TIM_M1_IRQn 1 */ 
-}
-
-/*Start here***********************************************************/
-/*GUI, this section is present only if serial communication is enabled*/
-/**
-  * @brief  This function handles USART interrupt request.
-  * @param  None
-  * @retval None
-  */
-void USART_IRQHandler(void)
-{
-
- /* USER CODE BEGIN USART_IRQn 0 */
-
-  /* USER CODE END USART_IRQn 0 */
-  if (LL_USART_IsActiveFlag_RXNE(pUSART.USARTx)) /* Valid data have been received */
-  {
-    uint16_t retVal;
-    retVal = *(uint16_t*)UFCP_RX_IRQ_Handler(&pUSART,LL_USART_ReceiveData8(pUSART.USARTx));
-    if (retVal == 1)
-    {
-      UI_SerialCommunicationTimeOutStart();
-    }
-    if (retVal == 2)
-    {
-      UI_SerialCommunicationTimeOutStop();
-    }
-  /* USER CODE BEGIN USART_RXNE */
-
-  /* USER CODE END USART_RXNE  */ 
-  }
-
-  if (LL_USART_IsActiveFlag_TXE(pUSART.USARTx))
-  {
-    UFCP_TX_IRQ_Handler(&pUSART);
-    /* USER CODE BEGIN USART_TXE */
-
-    /* USER CODE END USART_TXE   */
-  }
-  
-  if (LL_USART_IsActiveFlag_ORE(pUSART.USARTx)) /* Overrun error occurs */
-  {
-    /* Send Overrun message */
-    UFCP_OVR_IRQ_Handler(&pUSART);
-    LL_USART_ClearFlag_ORE(pUSART.USARTx); /* Clear overrun flag */
-    UI_SerialCommunicationTimeOutStop();
-    /* USER CODE BEGIN USART_ORE */
-
-    /* USER CODE END USART_ORE   */   
-  }
-  /* USER CODE BEGIN USART_IRQn 1 */
-  
-  /* USER CODE END USART_IRQn 1 */
-
-}
-/*End here***********************************************************/
-
-/**
   * @brief  This function handles Hard Fault exception.
   * @param  None
   * @retval None
@@ -249,37 +150,7 @@ void HardFault_Handler(void)
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {
-    {
-      if (LL_USART_IsActiveFlag_ORE(pUSART.USARTx)) /* Overrun error occurs */
-      {
-        /* Send Overrun message */
-        UFCP_OVR_IRQ_Handler(&pUSART);
-        LL_USART_ClearFlag_ORE(pUSART.USARTx); /* Clear overrun flag */
-        UI_SerialCommunicationTimeOutStop();
-      }
-      
-      if (LL_USART_IsActiveFlag_TXE(pUSART.USARTx))
-      {   
-        UFCP_TX_IRQ_Handler(&pUSART);
-      }  
-      
-      if (LL_USART_IsActiveFlag_RXNE(pUSART.USARTx)) /* Valid data have been received */
-      {
-        uint16_t retVal;
-        retVal = *(uint16_t*)(UFCP_RX_IRQ_Handler(&pUSART,LL_USART_ReceiveData8(pUSART.USARTx)));
-        if (retVal == 1)
-        {
-          UI_SerialCommunicationTimeOutStart();
-        }
-        if (retVal == 2)
-        {
-          UI_SerialCommunicationTimeOutStop();
-        }
-      }
-      else
-      {
-      }
-    }  
+
   }
  /* USER CODE BEGIN HardFault_IRQn 1 */
 

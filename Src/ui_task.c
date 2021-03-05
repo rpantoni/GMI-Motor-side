@@ -31,30 +31,26 @@ DAC_UI_Handle_t * pDAC = MC_NULL;
 extern DAC_UI_Handle_t DAC_UI_Params;
 
 MCP_Handle_t * pMCP = MC_NULL;
-MCP_Handle_t MCP_UI_Params; 
+MCP_Handle_t MCP_UI_Params;
 
 static volatile uint16_t  bUITaskCounter;
 static volatile uint16_t  bCOMTimeoutCounter;
 static volatile uint16_t  bCOMATRTimeCounter = SERIALCOM_ATR_TIME_TICKS;
 
 void UI_TaskInit( uint32_t* pUICfg, uint8_t bMCNum, MCI_Handle_t* pMCIList[],
-                  MCT_Handle_t* pMCTList[],const char* s_fwVer )
+                 MCT_Handle_t* pMCTList[],const char* s_fwVer )
 {
-      pDAC = &DAC_UI_Params;      
-      pDAC->_Super = UI_Params;
-
-      UI_Init( &pDAC->_Super, bMCNum, pMCIList, pMCTList, pUICfg ); /* Init UI and link MC obj */
-      UI_DACInit( &pDAC->_Super ); /* Init DAC */
-      UI_SetDAC( &pDAC->_Super, DAC_CH0, MC_PROTOCOL_REG_MEAS_EL_ANGLE );
-      UI_SetDAC( &pDAC->_Super, DAC_CH1, MC_PROTOCOL_REG_I_B );
-
-    pMCP = &MCP_UI_Params;
-    pMCP->_Super = UI_Params;
-
-    UFCP_Init( & pUSART );
-    MCP_Init(pMCP, (FCP_Handle_t *) & pUSART, & UFCP_Send, & UFCP_Receive, & UFCP_AbortReceive, pDAC, s_fwVer);
-    UI_Init( &pMCP->_Super, bMCNum, pMCIList, pMCTList, pUICfg ); /* Initialize UI and link MC components */
-
+  pDAC = &DAC_UI_Params;      
+  pDAC->_Super = UI_Params;
+  
+  UI_Init( &pDAC->_Super, bMCNum, pMCIList, pMCTList, pUICfg ); /* Init UI and link MC obj */
+  UI_DACInit( &pDAC->_Super ); /* Init DAC */
+  UI_SetDAC( &pDAC->_Super, DAC_CH0, MC_PROTOCOL_REG_MEAS_EL_ANGLE );
+  UI_SetDAC( &pDAC->_Super, DAC_CH1, MC_PROTOCOL_REG_I_B );
+  
+  pMCP = &MCP_UI_Params;
+  pMCP->_Super = UI_Params;
+  
 }
 
 __weak void UI_Scheduler(void)

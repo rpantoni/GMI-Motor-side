@@ -410,12 +410,12 @@ uint8_t Reg2Ram(uint32_t _RegNum, uint16_t _Value)
       }
     case Index_A_PLL_KP_GAIN                  :     //reg6  _1   
       { //MC_PROTOCOL_REG_PLL_KI,    
-        UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_PLL_KI, _Value); //tested working
+      //  UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_PLL_KI, _Value); //tested working
         break;
       }
     case Index_A_PLL_KI_GAIN                  :     //reg7  _1   
       { //MC_PROTOCOL_REG_PLL_KP,  
-        UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_PLL_KP, _Value);
+       // UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_PLL_KP, _Value);
         break;
       }
     case Index_A_PWM_FREQUENCY                :     //reg8  _ 
@@ -424,32 +424,32 @@ uint8_t Reg2Ram(uint32_t _RegNum, uint16_t _Value)
       }
     case Index_A_PID_TORQUE_KP_DEFAULT        :     //reg9  _1
       { //MC_PROTOCOL_REG_TORQUE_KP
-        UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_TORQUE_KP, _Value);
+      //  UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_TORQUE_KP, _Value);
         break;
       }
     case Index_A_PID_TORQUE_KI_DEFAULT        :     //reg10  _1
       { //MC_PROTOCOL_REG_TORQUE_KI
-        UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_TORQUE_KI, _Value);
+      //  UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_TORQUE_KI, _Value);
         break;
       }
     case Index_A_PID_FLUX_KP_DEFAULT          :     //reg11  _1
       { //MC_PROTOCOL_REG_FLUX_KP
-        UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_FLUX_KP, _Value);
+      //  UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_FLUX_KP, _Value);
         break;
       }
     case Index_A_PID_FLUX_KI_DEFAULT          :     //reg12  _1
       { //MC_PROTOCOL_REG_FLUX_KI
-        UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_FLUX_KI, _Value);
+      //  UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_FLUX_KI, _Value);
         break;
       }
     case Index_A_PID_SPEED_KP_DEFAULT         :     //reg13  _1
       { //MC_PROTOCOL_REG_SPEED_KP
-        UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_SPEED_KP, _Value);
+       // UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_SPEED_KP, _Value);
         break;
       }
     case Index_A_PID_SPEED_KI_DEFAULT         :     //reg14  _1
       { //MC_PROTOCOL_REG_SPEED_KI
-        UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_SPEED_KI, _Value);
+        //UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_SPEED_KI, _Value);
         break;
       }
     case Index_A_IQMAX                        :     //reg15  _1
@@ -458,7 +458,7 @@ uint8_t Reg2Ram(uint32_t _RegNum, uint16_t _Value)
       }
     case Index_A_DEFAULT_CONTROL_MODE         :     //reg16  _1 
       { //MC_PROTOCOL_REG_CONTROL_MODE
-        UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_CONTROL_MODE, _Value);
+       // UI_SetReg(&(GetMCP()->_Super), MC_PROTOCOL_REG_CONTROL_MODE, _Value);
         break;
       }
     case Index_A_OV_VOLTAGE_THRESHOLD_V       :     //reg17  _
@@ -497,9 +497,9 @@ uint8_t Reg2Ram(uint32_t _RegNum, uint16_t _Value)
     case Index_A_PHASE1_DURATION              :     //reg27  _1
       { //MC_PROTOCOL_CODE_SET_REVUP_DATA
         //read   ,rpm = (FinalMecSpeedUnit * _RPM) / SPEED_UNIT;
-        UI_GetRevupData(&(GetMCP()->_Super), stage, &Durationms, &FinalMecSpeedUnit, &FinalTorque);
+       // UI_GetRevupData(&(GetMCP()->_Super), stage, &Durationms, &FinalMecSpeedUnit, &FinalTorque);
         //write
-        bNoError = UI_SetRevupData( &(GetMCP()->_Super), stage, _Value, FinalMecSpeedUnit, FinalTorque );
+       // bNoError = UI_SetRevupData( &(GetMCP()->_Super), stage, _Value, FinalMecSpeedUnit, FinalTorque );
         break;
       }
     
@@ -522,9 +522,9 @@ uint8_t Reg2Ram(uint32_t _RegNum, uint16_t _Value)
     case Index_A_PHASE1_FINAL_SPEED_UNIT      :     //reg22  _1
       { //MC_PROTOCOL_CODE_SET_REVUP_DATA
         //read   ,rpm = (FinalMecSpeedUnit * _RPM) / SPEED_UNIT;
-        UI_GetRevupData(&(GetMCP()->_Super), stage, &Durationms, &FinalMecSpeedUnit, &FinalTorque);
+       // UI_GetRevupData(&(GetMCP()->_Super), stage, &Durationms, &FinalMecSpeedUnit, &FinalTorque);
         //write
-        bNoError = UI_SetRevupData( &(GetMCP()->_Super), stage, Durationms, _Value, FinalTorque );     
+      //  bNoError = UI_SetRevupData( &(GetMCP()->_Super), stage, Durationms, _Value, FinalTorque );     
         break;
       }
     
@@ -546,9 +546,9 @@ uint8_t Reg2Ram(uint32_t _RegNum, uint16_t _Value)
       }
     case Index_A_PHASE1_FINAL_CURRENT         :     //reg26  _1
       { //MC_PROTOCOL_CODE_SET_REVUP_DATA
-        UI_GetRevupData(&(GetMCP()->_Super), stage, &Durationms, &FinalMecSpeedUnit, &FinalTorque);
+      //  UI_GetRevupData(&(GetMCP()->_Super), stage, &Durationms, &FinalMecSpeedUnit, &FinalTorque);
         //write
-        bNoError = UI_SetRevupData( &(GetMCP()->_Super), stage, Durationms, FinalMecSpeedUnit, _Value );     
+      //  bNoError = UI_SetRevupData( &(GetMCP()->_Super), stage, Durationms, FinalMecSpeedUnit, _Value );     
         break;
       }
 
