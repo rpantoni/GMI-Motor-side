@@ -90,15 +90,19 @@ static volatile uint16_t hStopPermanencyCounterM1 = 0;
 uint8_t bMCBootCompleted = 0;
 
 /* USER CODE BEGIN Private Variables */
-#if (CONTROLLED_BRAKING==1)
 PID_Handle_t *pPIDBk[NBR_OF_MOTORS]; //RPa
 PID_Handle_t *pPIDIm[NBR_OF_MOTORS]; //RPa
 Braking_Handle_t *pBrakeId[NBR_OF_MOTORS];
-#endif
 
 #if (REGAL_OTF==1)
 OTF_Handle_t *pOTFId[NBR_OF_MOTORS];
 #endif
+
+///////////////////////////////////////////////
+// To be written to flash as settings
+static volatile uint8_t decel_control = (uint8_t) default_DECEL_CONTROL;
+//////////////////////////////////////////////
+
 /* USER CODE END Private Variables */
 
 /* Private functions ---------------------------------------------------------*/
@@ -151,12 +155,12 @@ __weak void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS],MCT_Handle_t* pMCTList
   /*********************************************************/
   /*    Braking and On-the-fly component initialization    */
   /*********************************************************/
-  BrakeHandle_M1.Vbus_Add = BK_VBUS_ADD;
-  OTFHandle_M1.MaxSyncSpeed = OTF_MAX_SYNC_SPEED;
-  OTFHandle_M1.MinSyncSpeed = OTF_MIN_SYNC_SPEED;
-  OTFHandle_M1.detect_bemfg = OTF_DBEMFG;
-  OTFHandle_M1.max_bemfg = OTF_MAX_BEMFG;
-  OTFHandle_M1.min_bemfg = OTF_MIN_BEMFG;
+  BrakeHandle_M1.Vbus_Add   = A_BK_VBUS_ADD;
+  OTFHandle_M1.MaxSyncSpeed = A_OTF_MAX_SYNC_SPEED;
+  OTFHandle_M1.MinSyncSpeed = A_OTF_MIN_SYNC_SPEED;
+  OTFHandle_M1.detect_bemfg = A_OTF_DBEMFG;
+  OTFHandle_M1.max_bemfg    = A_OTF_MAX_BEMFG;
+  OTFHandle_M1.min_bemfg    = A_OTF_MIN_BEMFG;
   /* USER CODE END MCboot 1 */
 
   /**************************************/
@@ -266,14 +270,12 @@ __weak void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS],MCT_Handle_t* pMCTList
   STM_NextState(&STM[M1],ICLWAIT);
 
   /* USER CODE BEGIN MCboot 2 */
-#if (CONTROLLED_BRAKING==1)
   PID_HandleInit(&PIDBkHandle_M1);//RPa
   PID_HandleInit(&PIDImHandle_M1);//RPa
   BrakingStruct_Init(&BrakeHandle_M1, pSTC[M1] );
   pPIDBk[M1] = &PIDBkHandle_M1;//RPa
   pPIDIm[M1] = &PIDImHandle_M1;//RPa
   pBrakeId[M1] = &BrakeHandle_M1;
-#endif
 #if (REGAL_OTF==1)
   pOTFId[M1] = &OTFHandle_M1;
 #endif
@@ -408,18 +410,38 @@ __weak void TSK_MediumFrequencyTaskM1(void)
 
     if ( STM_NextState( &STM[M1], START ) == true )
     {
-#if (CONTROLLED_BRAKING==1)
-      BrakeHandle_M1.Adapt_BusVoltageRef = VBS_GetAvBusVoltage_V(&(pBusSensorM1->_Super)) + BrakeHandle_M1.Vbus_Add;
+      if ((A_CONTROLLED_BRAKING==1)||(decel_control))
+      {
+        BrakeHandle_M1.Adapt_BusVoltageRef = VBS_GetAvBusVoltage_V(&(pBusSensorM1->_Super)) + BrakeHandle_M1.Vbus_Add;
+        
+        pPIDSpeed[M1]->wUpperIntegralLimit = (int32_t)A_IQMAX * (int32_t)SP_KIDIV;
+        pPIDSpeed[M1]->wLowerIntegralLimit = -(int32_t)A_IQMAX * (int32_t)SP_KIDIV;
+        pPIDSpeed[M1]->hUpperOutputLimit = (int16_t)A_IQMAX;
+        pPIDSpeed[M1]->hLowerOutputLimit = -(int16_t)A_IQMAX;
+      }
       
-      pPIDSpeed[M1]->wUpperIntegralLimit = (int32_t)A_IQMAX * (int32_t)SP_KIDIV;
-      pPIDSpeed[M1]->wLowerIntegralLimit = -(int32_t)A_IQMAX * (int32_t)SP_KIDIV;
-      pPIDSpeed[M1]->hUpperOutputLimit = (int16_t)A_IQMAX;
-      pPIDSpeed[M1]->hLowerOutputLimit = -(int16_t)A_IQMAX;
-#endif 
+      if (decel_control == 0)
+      {
+        if (MC_GetImposedDirectionMotor1() == 1) //CW direction
+        {
+          pPIDSpeed[M1]->wLowerIntegralLimit = 0;
+          pPIDSpeed[M1]->hLowerOutputLimit = 0;
+          pPIDSpeed[M1]->wUpperIntegralLimit = (int32_t)A_IQMAX * (int32_t)SP_KIDIV;
+          pPIDSpeed[M1]->hUpperOutputLimit = (int16_t)A_IQMAX;
+        }
+        else if (MC_GetImposedDirectionMotor1()== -1 ) //CCW direction
+        {
+          pPIDSpeed[M1]->hUpperOutputLimit = 0;
+          pPIDSpeed[M1]->wUpperIntegralLimit = 0;
+          pPIDSpeed[M1]->wLowerIntegralLimit = -(int32_t)A_IQMAX * (int32_t)SP_KIDIV;
+          pPIDSpeed[M1]->hLowerOutputLimit = -(int16_t)A_IQMAX;
+        }
+      }
 #if (REGAL_OTF==1)
       pOTFId[M1]->bemfg_alpha = pOTFId[M1]->max_bemfg;
       pOTFId[M1]->bemfg_beta = pOTFId[M1]->max_bemfg;
       OTFHandle_M1.seamless_transfer = 0;
+      OTFHandle_M1.hdir = 0;
 #endif  
       FOC_Clear( M1 );  
       
@@ -565,11 +587,8 @@ __weak void TSK_MediumFrequencyTaskM1(void)
     STC_SetSpeedSensor(pSTC[M1], &STO_PLL_M1._Super); /*Observer has converged*/
     {
       /* USER CODE BEGIN MediumFrequencyTask M1 1 */
-#if (CONTROLLED_BRAKING == 1)
-      //Regenerative control during motor run state
-      RegenControlM1(pBrakeId[M1], pPIDBk[M1],pPIDSpeed[M1], pSTC[M1], pBusSensorM1);
-#endif
-      //////////////////////////////////////////////////////////////////
+      if (decel_control) RegenControlM1(pBrakeId[M1], pPIDBk[M1],pPIDSpeed[M1], pSTC[M1], pBusSensorM1);//Regenerative control during motor run state    
+
       /* USER CODE END MediumFrequencyTask M1 1 */
       FOC_InitAdditionalMethods(M1);
       FOC_CalcCurrRef( M1 );
@@ -598,10 +617,7 @@ __weak void TSK_MediumFrequencyTaskM1(void)
       pOTFId[M1]->seamless_transfer = 4;
     }
 #endif
-#if (CONTROLLED_BRAKING == 1)
-    //Regenerative control during motor run state
-    RegenControlM1(pBrakeId[M1], pPIDBk[M1],pPIDSpeed[M1], pSTC[M1], pBusSensorM1);
-#endif
+    if (decel_control) RegenControlM1(pBrakeId[M1], pPIDBk[M1],pPIDSpeed[M1], pSTC[M1], pBusSensorM1);//Regenerative control during motor run state  
     /* USER CODE END MediumFrequencyTask M1 2 */
 
     MCI_ExecBufferedCommands( oMCInterface[M1] );
@@ -618,42 +634,48 @@ __weak void TSK_MediumFrequencyTaskM1(void)
     break;
 
   case ANY_STOP:
-#if (CONTROLLED_BRAKING == 0)
-    R3_1_SwitchOffPWM( pwmcHandle[M1] );
-    FOC_Clear( M1 );
-    MPM_Clear( (MotorPowMeas_Handle_t*) pMPM[M1] );
-    TSK_SetStopPermanencyTimeM1( STOPPERMANENCY_TICKS );
+    if(A_CONTROLLED_BRAKING==0)
+    {
+      R3_1_SwitchOffPWM( pwmcHandle[M1] );
+      FOC_Clear( M1 );
+      MPM_Clear( (MotorPowMeas_Handle_t*) pMPM[M1] );
+      TSK_SetStopPermanencyTimeM1( STOPPERMANENCY_TICKS );
+    }
     /* USER CODE BEGIN MediumFrequencyTask M1 4 */
-#elif (CONTROLLED_BRAKING == 1)
-    pBrakeId[M1]->IMax_Ref = BRAKING_CURRENTSEEDING; //RPa: seeding of current reference
-    pBrakeId[M1]->BrakingPhase = STARTRAMP;
-    pBrakeId[M1]->rMeasuredSpeed = SPD_GetAvrgMecSpeedUnit( pSTC[M1]->SPD );
-    pBrakeId[M1]->Adapt_IMax = (int32_t)((BK_RAMP_a * (int32_t) pBrakeId[M1]->rMeasuredSpeed * (int32_t) pBrakeId[M1]->rMeasuredSpeed)>>BYTE_SHIFT) + \
-      (int32_t)(BK_RAMP_b * (int32_t)pBrakeId[M1]->rMeasuredSpeed) + BK_RAMP_c;
-#endif
+    else if (A_CONTROLLED_BRAKING==1)
+    {
+      pBrakeId[M1]->IMax_Ref = BRAKING_CURRENTSEEDING; //RPa: seeding of current reference
+      pBrakeId[M1]->BrakingPhase = STARTRAMP;
+      pBrakeId[M1]->rMeasuredSpeed = SPD_GetAvrgMecSpeedUnit( pSTC[M1]->SPD );
+      pBrakeId[M1]->Adapt_IMax = (int32_t)(((int32_t)A_BK_RAMP_a * (int32_t) pBrakeId[M1]->rMeasuredSpeed * (int32_t) pBrakeId[M1]->rMeasuredSpeed)>>BYTE_SHIFT) + \
+        (int32_t)((int32_t)A_BK_RAMP_b * (int32_t)pBrakeId[M1]->rMeasuredSpeed) + (int32_t)A_BK_RAMP_c;
+    }
     /* USER CODE END MediumFrequencyTask M1 4 */
-
+    
     STM_NextState( &STM[M1], STOP );
     break;
 
   case STOP:
-#if (CONTROLLED_BRAKING == 1)
-    //RPa: Non-regenerative braking
-    MotorBraking_StateMachine(pBrakeId[M1], pPIDBk[M1], pPIDIm[M1], pSTC[M1], &FOCVars[M1], pBusSensorM1 );
-    if (pBrakeId[M1]->BrakingPhase == STARTRAMP)//RPa: this state can only be called from LOWSPEED_IQHOLD
+    if(A_CONTROLLED_BRAKING == 1)
     {
-      FOC_Clear( M1 );
-      MPM_Clear( (MotorPowMeas_Handle_t*) pMPM[M1] ); 
-      STM_NextState( &STM[M1], STOP_IDLE );      
+      //RPa: Non-regenerative braking
+      MotorBraking_StateMachine(pBrakeId[M1], pPIDBk[M1], pPIDIm[M1], pSTC[M1], &FOCVars[M1], pBusSensorM1 );
+      if (pBrakeId[M1]->BrakingPhase == STARTRAMP)//RPa: this state can only be called from LOWSPEED_IQHOLD
+      {
+        FOC_Clear( M1 );
+        MPM_Clear( (MotorPowMeas_Handle_t*) pMPM[M1] ); 
+        STM_NextState( &STM[M1], STOP_IDLE );      
+      }
     }
-#else
-    if ( TSK_StopPermanencyTimeHasElapsedM1())
+    else
     {
-      FOC_Clear( M1 );
-      MPM_Clear( (MotorPowMeas_Handle_t*) pMPM[M1] ); 
-      STM_NextState( &STM[M1], STOP_IDLE );
+      if ( TSK_StopPermanencyTimeHasElapsedM1())
+      {
+        FOC_Clear( M1 );
+        MPM_Clear( (MotorPowMeas_Handle_t*) pMPM[M1] ); 
+        STM_NextState( &STM[M1], STOP_IDLE );
+      }
     }
-#endif
     break;
 
   case STOP_IDLE:
@@ -807,7 +829,7 @@ __weak bool TSK_StopPermanencyTimeHasElapsedM1(void)
   return (retVal);
 }
 
-#if defined (CCMRAM)
+#if defined (CCMRAM_ENABLED)
 #if defined (__ICCARM__)
 #pragma location = ".ccmram"
 #elif defined (__CC_ARM)

@@ -209,16 +209,16 @@ __weak const uint16_t A_PHASE5_FINAL_SPEED_UNIT     @(FLASH_USER_START_ADDR + (2
 __weak const uint16_t A_PHASE5_FINAL_CURRENT        @(FLASH_USER_START_ADDR + (2 * Index_A_PHASE5_FINAL_CURRENT        )  ) = PHASE5_FINAL_CURRENT       	; 
 __weak const uint16_t A_TRANSITION_DURATION         @(FLASH_USER_START_ADDR + (2 * Index_A_TRANSITION_DURATION         )  ) = TRANSITION_DURATION        	; 
 
-__weak const uint16_t CONTROLLED_BRAKING            @(FLASH_USER_START_ADDR + (2 *   Index_CONTROLLED_BRAKING          )  ) = default_CONTROLLED_BRAKING   	; 
-__weak const uint16_t BK_VBUS_ADD                   @(FLASH_USER_START_ADDR + (2 *   Index_BK_VBUS_ADD                 )  ) = default_BK_VBUS_ADD          	; 
-__weak const int16_t BK_RAMP_a                      @(FLASH_USER_START_ADDR + (2 *   Index_BK_RAMP_a                   )  ) = default_BK_RAMP_a            	; 
-__weak const int16_t BK_RAMP_b                      @(FLASH_USER_START_ADDR + (2 *   Index_BK_RAMP_b                   )  ) = default_BK_RAMP_b            	; 
-__weak const int16_t BK_RAMP_c                      @(FLASH_USER_START_ADDR + (2 *   Index_BK_RAMP_c                   )  ) = default_BK_RAMP_c            	; 
-__weak const uint16_t OTF_DBEMFG                    @(FLASH_USER_START_ADDR + (2 *   Index_OTF_DBEMFG                  )  ) = default_OTF_DBEMFG           	; 
-__weak const uint16_t OTF_MAX_BEMFG                 @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MAX_BEMFG               )  ) = default_OTF_MAX_BEMFG        	; 
-__weak const uint16_t OTF_MIN_BEMFG                 @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MIN_BEMFG               )  ) = default_OTF_MIN_BEMFG        	; 
-__weak const uint16_t OTF_MAX_SYNC_SPEED            @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MAX_SYNC_SPEED          )  ) = default_OTF_MAX_SYNC_SPEED   	; 
-__weak const uint16_t OTF_MIN_SYNC_SPEED            @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MIN_SYNC_SPEED          )  ) = default_OTF_MIN_SYNC_SPEED   	; 
+__weak const uint16_t A_CONTROLLED_BRAKING            @(FLASH_USER_START_ADDR + (2 *   Index_CONTROLLED_BRAKING          )  ) = default_CONTROLLED_BRAKING   	; 
+__weak const uint16_t A_BK_VBUS_ADD                   @(FLASH_USER_START_ADDR + (2 *   Index_BK_VBUS_ADD                 )  ) = default_BK_VBUS_ADD          	; 
+__weak const int16_t A_BK_RAMP_a                      @(FLASH_USER_START_ADDR + (2 *   Index_BK_RAMP_a                   )  ) = default_BK_RAMP_a            	; 
+__weak const int16_t A_BK_RAMP_b                      @(FLASH_USER_START_ADDR + (2 *   Index_BK_RAMP_b                   )  ) = default_BK_RAMP_b            	; 
+__weak const int16_t A_BK_RAMP_c                      @(FLASH_USER_START_ADDR + (2 *   Index_BK_RAMP_c                   )  ) = default_BK_RAMP_c            	; 
+__weak const uint16_t A_OTF_DBEMFG                    @(FLASH_USER_START_ADDR + (2 *   Index_OTF_DBEMFG                  )  ) = default_OTF_DBEMFG           	; 
+__weak const uint16_t A_OTF_MAX_BEMFG                 @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MAX_BEMFG               )  ) = default_OTF_MAX_BEMFG        	; 
+__weak const uint16_t A_OTF_MIN_BEMFG                 @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MIN_BEMFG               )  ) = default_OTF_MIN_BEMFG        	; 
+__weak const uint16_t A_OTF_MAX_SYNC_SPEED            @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MAX_SYNC_SPEED          )  ) = default_OTF_MAX_SYNC_SPEED   	; 
+__weak const uint16_t A_OTF_MIN_SYNC_SPEED            @(FLASH_USER_START_ADDR + (2 *   Index_OTF_MIN_SYNC_SPEED          )  ) = default_OTF_MIN_SYNC_SPEED   	; 
 
 __weak const uint16_t D_HALL_SENSORS_PLACEMENT      @(FLASH_USER_START_ADDR + (2 * Index_D_HALL_SENSORS_PLACEMENT      )  ) = HALL_SENSORS_PLACEMENT     	; 
 __weak const uint16_t D_HALL_PHASE_SHIFT            @(FLASH_USER_START_ADDR + (2 * Index_D_HALL_PHASE_SHIFT            )  ) = HALL_PHASE_SHIFT           	; 

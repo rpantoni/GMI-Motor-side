@@ -35,7 +35,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* Setup -----------------------------------------------------------------------------------------------------------------------*/
-static Ram_Buf_Handle Mc_StateMachineStructMem_u32;
+//static Ram_Buf_Handle Mc_StateMachineStructMem_u32;
 
 typedef enum {
     INIT_MODULE,

@@ -67,7 +67,8 @@
 ///////////////////////////////////////////////////////////////////////////////////
 //Braking and On-the-fly definitions for default value
 #define default_CONTROLLED_BRAKING      0u
-#define default_BK_VBUS_ADD             20 
+#define default_DECEL_CONTROL           1u
+#define default_BK_VBUS_ADD             40 
 // RPa: the following hash defines are for the IMax trajectories to always be within the motor loss ellipse
 //      This has to be adapted for each motor class; for conservative setting: a=13, b=-6, c=1220
 #define default_BK_RAMP_a               13

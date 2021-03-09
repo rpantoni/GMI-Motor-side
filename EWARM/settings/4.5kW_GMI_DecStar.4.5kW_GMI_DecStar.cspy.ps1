@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.general.xcl" --backend -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-sideV2\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.general.xcl" --backend -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-sideV2\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.driver.xcl" 
 }
 else
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-sideV2\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\610120299\Documents\GitHub\GMI-Motor-sideV2\GMI-Motor-side\EWARM\settings\4.5kW_GMI_DecStar.4.5kW_GMI_DecStar.driver.xcl" 
 }

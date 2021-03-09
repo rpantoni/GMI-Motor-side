@@ -3,7 +3,6 @@
 *.lst
 *.pbi
 *.o
-*.pbi
 *.xcl
 *.hex
 *.browse
@@ -12,7 +11,3 @@
 *.out
 *.ninja_log
 *.pbw
-EWARM/4.5kW_GMI_DecStar/Obj/4.5kW_GMI_DecStar.pbd
-*.browse
-*.pbi
-*.dep

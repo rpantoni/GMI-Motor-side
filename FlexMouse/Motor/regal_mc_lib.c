@@ -15,7 +15,7 @@
 #include "mc_config.h"
 #include "revup_ctrl.h"
 #include "zz_module_flash.h"
-
+    
 /*Private Variables */
 static uint8_t Imax_count = 0;
 static uint16_t LowSide_count = 0;
@@ -150,8 +150,8 @@ void BrakingStruct_Init(Braking_Handle_t * pHandle, SpeednTorqCtrl_Handle_t * pS
 {
   pHandle->rMeasuredSpeed = SPD_GetAvrgMecSpeedUnit( pSTCHandle->SPD );
   //RPa: take the absolute value of speed measure
-  pHandle->Adapt_IMax = (int32_t)((BK_RAMP_a * (int32_t) pHandle->rMeasuredSpeed * (int32_t) pHandle->rMeasuredSpeed)>>BYTE_SHIFT) + \
-    (int32_t)(BK_RAMP_b * (int32_t)pHandle->rMeasuredSpeed) + BK_RAMP_c;
+  pHandle->Adapt_IMax = (int32_t)((A_BK_RAMP_a * (int32_t) pHandle->rMeasuredSpeed * (int32_t) pHandle->rMeasuredSpeed)>>BYTE_SHIFT) + \
+    (int32_t)(A_BK_RAMP_b * (int32_t)pHandle->rMeasuredSpeed) + A_BK_RAMP_c;
 }
 
 /**
@@ -167,8 +167,8 @@ void MotorBraking_StateMachine(Braking_Handle_t * pBkHandle, PID_Handle_t * pPID
   //RPa: IMax trajectory is controlled to always be within the motor loss ellipse (copper+iron losses)
   if (Imax_count >= 2) //RPa: does an IMax trajectory sampling every 2msec but sampling can be increased
   {
-    pBkHandle->Adapt_IMax = (int32_t)((BK_RAMP_a * (int32_t) MeasuredSpeedAbsValue * (int32_t) MeasuredSpeedAbsValue)>>BYTE_SHIFT) + \
-      (int32_t)(BK_RAMP_b * (int32_t)MeasuredSpeedAbsValue) + BK_RAMP_c;
+    pBkHandle->Adapt_IMax = (int32_t)((A_BK_RAMP_a * (int32_t) MeasuredSpeedAbsValue * (int32_t) MeasuredSpeedAbsValue)>>BYTE_SHIFT) + \
+      (int32_t)(A_BK_RAMP_b * (int32_t)MeasuredSpeedAbsValue) + A_BK_RAMP_c;
     Imax_count = 0;
   }
   Imax_count++;

@@ -27,6 +27,7 @@ extern PQD_MotorPowMeas_Handle_t *pMPM[NBR_OF_MOTORS];
 
 extern ProcessInfo processInfoTable[];
 Module_StateMachineControl  module_StateMachineControl;
+static Ram_Buf_Handle Mc_StateMachineStructMem_u32;
 
 /************************************ All the setting should be mapped into FLash *********************************************/
 //__weak __no_init const uint16_t   MIN_COMMANDABLE_SPEED	       @(FLASH_USER_START_ADDR + (2 *  Index_MIN_COMMANDABLE_SPEED	   ) );
@@ -36,7 +37,7 @@ __weak const uint16_t   SPEED_UP_RAMP_RATE           @(FLASH_USER_START_ADDR + (
 __weak const uint16_t   SPEED_DOWN_RAMP_RATE         @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_DOWN_RAMP_RATE         ) ) = 100       ;             
 __weak const uint16_t   SPEED_CONSIDERED_STOPPED     @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_CONSIDERED_STOPPED     ) ) = 200       ;             
 __weak const uint16_t   MotSpinTimeOut               @(FLASH_USER_START_ADDR + (2 *  Index_MotSpinTimeOut               ) ) = 4         ;             
-__weak const uint16_t   SpinPollPeriod               @(FLASH_USER_START_ADDR + (2 *  Index_SpinPollPeriod               ) ) = PHASE1_DURATION + PHASE2_DURATION  + PHASE3_DURATION + PHASE4_DURATION   ;             
+__weak const uint16_t   SpinPollPeriod               @(FLASH_USER_START_ADDR + (2 *  Index_SpinPollPeriod               ) ) = PHASE1_DURATION + PHASE2_DURATION  + PHASE3_DURATION + PHASE4_DURATION + PHASE5_DURATION; //7000      ;             
 __weak const uint16_t   numOfStartRetry              @(FLASH_USER_START_ADDR + (2 *  Index_numOfStartRetry              ) ) = 6         ;             
 __weak const uint16_t   StartRetryPeriod             @(FLASH_USER_START_ADDR + (2 *  Index_StartRetryPeriod             ) ) = 2000      ;             
 __weak const uint16_t   StartPeriodInc               @(FLASH_USER_START_ADDR + (2 *  Index_StartPeriodInc               ) ) = 10000     ;             
@@ -99,7 +100,8 @@ uint64_t tt_derateTempPollTime;
 uint64_t tt_TurnOnLowSideTime;
 
 //RPa: OTF temporary fix
-uint64_t tt_FaultOTFWaitTime;
+uint64_t tt_FaultOTFWaitTime_u64 = 0;
+#define FAULT_WAIT_TIME 10000 // When fault occurs, give motor time to stabilise before starting back again, this would also give the fan to decelerate a bit for next start-up
 
 /****************** local fault status ************************/
 /** GMI_FaultStatus => 0x01 = start-up retry error            */
@@ -110,10 +112,14 @@ int16_t tmpryTempature = 0;
 
 
 uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, uint8_t next_State_u8,
-                        uint8_t irq_id_u8) {
+                                   uint8_t irq_id_u8) 
+{
     uint8_t return_state_u8 = 0;
     /** pre-process the Motor stop speed command or fault status, both get higher priority in the state machine**/
     updateAvrCurrent();
+  
+ 
+  
     if((!module_StateMachineControl.motorEnable) && (next_State_u8 != INIT_MODULE)){
       module_StateMachineControl.command_Speed = 0; //disable the motor
       return_state_u8 = IDLE_MODULE;  
@@ -153,7 +159,7 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
             Mc_StateMachineStructMem_u32 =  StructMem_CreateInstance(MODULE_MC_STATEMACHINE, sizeof(Module_StateMachineControl), ACCESS_MODE_WRITE_ONLY, NULL, EMPTY_LIST);//System call create a structured memory for this driver [should map it back to this driver local struct]
             (*Mc_StateMachineStructMem_u32).p_ramBuf_u8 = (uint8_t *)&module_StateMachineControl ;    //map the generated module's control memory into the structured memory
             uint8_t module_Mc_StateMachine_Index = getProcessInfoIndex(MODULE_MC_STATEMACHINE);
-            processInfoTable[module_Mc_StateMachine_Index].Sched_ModuleData.p_masterSharedMem_u32 = Mc_StateMachineStructMem_u32;     //also map it back to module_paramters under kernel 
+    processInfoTable[module_Mc_StateMachine_Index].Sched_ModuleData.p_masterSharedMem_u32 =(Ram_Buf_Handle) Mc_StateMachineStructMem_u32; //also map it back to module_paramters under kernel 
 
             //init motor from boot 
             /*** check the motor setting and init all motor setting ***/            
@@ -161,7 +167,6 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
             module_StateMachineControl.errorCode_u8 = 0;
             module_StateMachineControl.motorDir = 1; //CW
             module_StateMachineControl.motorEnable = TRUE;
-            
             //init motor flag
             return_state_u8 = IDLE_MODULE;
           break;
@@ -431,6 +436,7 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
         //Error report 
         case FAULT_PROCESS_MODULE: {
        //     if( setting status ){                                                                                             //Fault command will be issued according to user setting!!
+    //State_Check = MC_GetOccurredFaultsMotor1();
           module_StateMachineControl.errorCode_u8 = MC_GetOccurredFaultsMotor1();    
           MC_AcknowledgeFaultMotor1();                                                                                      //CLear ST motor libraries fault status
        //     }
@@ -438,15 +444,16 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
             return_state_u8 = FAULT_REPORT_MODULE;
             break;
         }
+  
         case FAULT_REPORT_MODULE: {
-            setupSoftwareIRQ(module_id_u8, MODULE_ERR_LOGHANDLE, 0xEF, GMI_FaultStatus, 0x00, NULL);  
-            tt_FaultOTFWaitTime = getSysCount() + 10000; //ST_Motor fault error persisting//Note: in FAULT_NOW situation will continue to issue fault to error-module 
+    setupSoftwareIRQ(module_id_u8, MODULE_ERR_LOGHANDLE, 0xEF, GMI_FaultStatus, 0x00, NULL);  //Note: in FAULT_NOW situation will continue to issue fault to error-module 
+    tt_FaultOTFWaitTime_u64 = getSysCount() + FAULT_WAIT_TIME; // An arbitrary wait time for stability after fault
               return_state_u8 = FAULT_WAIT_MODULE;
             break;
         }
         
     case FAULT_WAIT_MODULE: { 
-      if (getSysCount()>=tt_FaultOTFWaitTime)
+    if(getSysCount() >= tt_FaultOTFWaitTime_u64)
       {
 #if (FAULT_AUTOSTART==0)    
         autorestart = FALSE;
@@ -458,7 +465,6 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
       {
         
       }
-
       return_state_u8 = FAULT_WAIT_MODULE;
       break;
     }
@@ -516,7 +522,7 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
 void setSpeed(int32_t target_speed){
   int32_t current_speed = MC_GetMecSpeedAverageMotor1() * 6;   //convert to rpm
   uint32_t speed_ramp_up_duration = (abs(current_speed - target_speed ) * 1000) / SPEED_UP_RAMP_RATE;
-  MC_ProgramSpeedRampMotor1( target_speed / 6, speed_ramp_up_duration );    
+  MC_ProgramSpeedRampMotor1( target_speed / 6, speed_ramp_up_duration );
 }
 
 uint8_t AvrCurrentIndx = 0;

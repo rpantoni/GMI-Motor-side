@@ -208,7 +208,7 @@
                                                              without being considered wrong.
                                                              In 1/16 of forced speed */ 
                                                                                     
-#define TRANSITION_DURATION            25  /* Switch over duration, ms */ 
+#define TRANSITION_DURATION            0  /* Switch over duration, ms, RPa: important to be set to zero for the OTF to work properly */ 
 /******************************   BUS VOLTAGE Motor 1  **********************/
 #define  M1_VBUS_SAMPLING_TIME  LL_ADC_SAMPLING_CYCLE(61)
 /******************************   Temperature sensing Motor 1  **********************/
