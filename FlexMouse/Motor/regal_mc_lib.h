@@ -22,7 +22,6 @@
 ////////////////////////////////////////////////////////////////////////////
 // RPa: Reference Bus Voltage Settings for non-regenerative braking
 #define TORQUE2IQ_CONVERSION           338 //1.3229 shifted-
-#define BRAKING_ENDSPEED                10
 #define BRAKING_CURRENTSEEDING          500
 #define FP16 65536
 #define FP8  256
@@ -66,9 +65,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////////
 //Braking and On-the-fly definitions for default value
-#define default_CONTROLLED_BRAKING      0u
+#define default_CONTROLLED_BRAKING      1u
 #define default_DECEL_CONTROL           1u
 #define default_BK_VBUS_ADD             40 
+#define default_BK_LOWSIDE_DURATION     5000
+#define default_BK_ENDSPEED             10
 // RPa: the following hash defines are for the IMax trajectories to always be within the motor loss ellipse
 //      This has to be adapted for each motor class; for conservative setting: a=13, b=-6, c=1220
 #define default_BK_RAMP_a               13

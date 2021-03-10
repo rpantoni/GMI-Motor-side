@@ -19,6 +19,13 @@
 /*Private Variables */
 static uint8_t Imax_count = 0;
 static uint16_t LowSide_count = 0;
+
+///////////////////////////////////////////////
+// To be written to flash as settings
+static volatile uint16_t BRAKING_ENDSPEED = (uint16_t) default_BK_ENDSPEED;
+static volatile uint16_t LOWSIDE_DURATION = (uint16_t) default_BK_LOWSIDE_DURATION;
+//////////////////////////////////////////////
+
 /**
   * @brief  PI / PID Bus Voltage parameters Motor 1
   */
@@ -254,7 +261,7 @@ void MotorBraking_StateMachine(Braking_Handle_t * pBkHandle, PID_Handle_t * pPID
 
   case TURNONLOWSIDE:
     
-    if (LowSide_count>1000)//RPa: Low-side turned on for a specified amount of time; this can be tuned later on for the application (or not even turned off at all)
+    if (LowSide_count>LOWSIDE_DURATION)//RPa: Low-side turned on for a specified amount of time; this can be tuned later on for the application (or not even turned off at all)
     {
       pBkHandle->BrakingPhase=STARTRAMP;
     }
