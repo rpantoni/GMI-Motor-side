@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "motorcontrol.h"
+#include "hardware_config.h"
 #include "zz_module_flash.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -28,7 +29,7 @@
 #include "bus_voltage_sensor.h"
 #include "mc_interface.h"
 
-#if ADV_TIM_CLK_MHz != 72
+#if ADV_TIM_CLK_MHz != CLOCK_CHECK
 #error Check ADV_TIM_CLK_MHz
 #endif
 
@@ -75,6 +76,7 @@ static void MX_NVIC_Init(void);
 extern void SysConInit(void);
 extern void SysRun(void);
 extern uint64_t getSysCount(void);
+
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -121,7 +123,9 @@ int main(void)
   tt_ICLDelay = getSysCount() + ICLDelayPeriod;    
   while(VBS_GetAvBusVoltage_V(PQD_MotorPowMeasM1.pVBS)<  A_UD_VOLTAGE_THRESHOLD_V) {}
   while(getSysCount() <= tt_ICLDelay) {}  
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW)) 
   LL_GPIO_SetOutputPin(M1_ICL_SHUT_OUT_GPIO_Port, M1_ICL_SHUT_OUT_Pin);
+#endif
   
   
   MX_CRC_Init();
@@ -138,9 +142,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))     
     HAL_GPIO_TogglePin(LED_Debug_GPIO_Port, LED_Debug_Pin);
     HAL_Delay(1000);
+#endif
       
     /* USER CODE END WHILE */
 
@@ -161,6 +166,7 @@ void SystemClock_Config(void)
   {
   Error_Handler();  
   }
+  #if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))  
   LL_RCC_HSE_Enable();
 
    /* Wait till HSE is ready */
@@ -169,6 +175,17 @@ void SystemClock_Config(void)
     
   }
   LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE_DIV_1, LL_RCC_PLL_MUL_9);
+#elif HARDWARE_VERSION == HARDWARE_VERSION_1p3KW
+  LL_RCC_HSI_Enable();
+
+   /* Wait till HSI is ready */
+  while(LL_RCC_HSI_IsReady() != 1)
+  {
+    
+  }
+  LL_RCC_HSI_SetCalibTrimming(16);
+  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI_DIV_2, LL_RCC_PLL_MUL_16);
+#endif  
   LL_RCC_PLL_Enable();
 
    /* Wait till PLL is ready */
@@ -186,7 +203,7 @@ void SystemClock_Config(void)
   {
   
   }
-  LL_SetSystemCoreClock(72000000);
+  LL_SetSystemCoreClock(SYSCLK_FREQ);
 
    /* Update the time base */
   if (HAL_InitTick (TICK_INT_PRIORITY) != HAL_OK)
@@ -213,8 +230,8 @@ static void MX_NVIC_Init(void)
   NVIC_SetPriority(ADC1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0));
   NVIC_EnableIRQ(ADC1_IRQn);
   /* TIM2_IRQn interrupt configuration */
-  NVIC_SetPriority(TIM2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 0));
-  NVIC_EnableIRQ(TIM2_IRQn);
+  //NVIC_SetPriority(TIM2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 0));
+  //NVIC_EnableIRQ(TIM2_IRQn);
   /* USART1_IRQn interrupt configuration */
   NVIC_SetPriority(USART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 1));
   NVIC_EnableIRQ(USART1_IRQn);
@@ -259,7 +276,11 @@ static void MX_ADC1_Init(void)
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))   
   GPIO_InitStruct.Pin = M1_BUS_VOLTAGE_Pin|M1_TEMPERATURE_Pin;
+#elif HARDWARE_VERSION == HARDWARE_VERSION_1p3KW
+  GPIO_InitStruct.Pin = M1_BUS_VOLTAGE_Pin;
+#endif
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -274,7 +295,11 @@ static void MX_ADC1_Init(void)
   ADC_InitStruct.LowPowerMode = LL_ADC_LP_MODE_NONE;
   LL_ADC_Init(ADC1, &ADC_InitStruct);
   ADC_REG_InitStruct.TriggerSource = LL_ADC_REG_TRIG_SOFTWARE;
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))  
   ADC_REG_InitStruct.SequencerLength = LL_ADC_REG_SEQ_SCAN_ENABLE_2RANKS;
+#elif HARDWARE_VERSION == HARDWARE_VERSION_1p3KW
+  ADC_REG_InitStruct.SequencerLength = LL_ADC_REG_SEQ_SCAN_DISABLE;
+#endif
   ADC_REG_InitStruct.SequencerDiscont = LL_ADC_REG_SEQ_DISCONT_DISABLE;
   ADC_REG_InitStruct.ContinuousMode = LL_ADC_REG_CONV_SINGLE;
   ADC_REG_InitStruct.DMATransfer = LL_ADC_REG_DMA_TRANSFER_LIMITED;
@@ -325,9 +350,11 @@ static void MX_ADC1_Init(void)
   LL_ADC_SetChannelSingleDiff(ADC1, LL_ADC_CHANNEL_11, LL_ADC_SINGLE_ENDED);
   /** Configure Regular Channel 
   */
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))  
   LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_2, LL_ADC_CHANNEL_12);
   LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_12, LL_ADC_SAMPLINGTIME_61CYCLES_5);
   LL_ADC_SetChannelSingleDiff(ADC1, LL_ADC_CHANNEL_12, LL_ADC_SINGLE_ENDED);
+#endif
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
@@ -399,8 +426,9 @@ static void MX_TIM1_Init(void)
   /* Peripheral clock enable */
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_TIM1);
   
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))  
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
   /**TIM1 GPIO Configuration  
   PB12   ------> TIM1_BKIN
   PA11   ------> TIM1_BKIN2 
@@ -412,7 +440,7 @@ static void MX_TIM1_Init(void)
   GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
   GPIO_InitStruct.Alternate = LL_GPIO_AF_6;
   LL_GPIO_Init(M1_OVP_GPIO_Port, &GPIO_InitStruct);
-
+#endif
   GPIO_InitStruct.Pin = M1_OCP_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
@@ -475,7 +503,11 @@ static void MX_TIM1_Init(void)
   TIM_BDTRInitStruct.BreakFilter = LL_TIM_BREAK_FILTER_FDIV1;
   TIM_BDTRInitStruct.Break2State = LL_TIM_BREAK2_ENABLE;
   TIM_BDTRInitStruct.Break2Polarity = LL_TIM_BREAK2_POLARITY_LOW;
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))
   TIM_BDTRInitStruct.Break2Filter = LL_TIM_BREAK2_FILTER_FDIV4_N8;
+#elif HARDWARE_VERSION == HARDWARE_VERSION_1p3KW
+  TIM_BDTRInitStruct.Break2Filter = LL_TIM_BREAK2_FILTER_FDIV1;
+#endif
   TIM_BDTRInitStruct.AutomaticOutput = LL_TIM_AUTOMATICOUTPUT_DISABLE;
   LL_TIM_BDTR_Init(TIM1, &TIM_BDTRInitStruct);
   /* USER CODE BEGIN TIM1_Init 2 */
@@ -606,13 +638,16 @@ static void MX_CRC_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))   
   LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+#endif
 
   /* GPIO Ports Clock Enable */
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOF);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))     
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOF);
 
   /**/
   LL_GPIO_ResetOutputPin(M1_ICL_SHUT_OUT_GPIO_Port, M1_ICL_SHUT_OUT_Pin);
@@ -635,7 +670,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(LED_Debug_GPIO_Port, &GPIO_InitStruct);
-
+#endif
 }
 
 /* USER CODE BEGIN 4 */

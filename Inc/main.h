@@ -45,6 +45,7 @@ extern "C" {
 #include "stm32f3xx.h"
 #include "stm32f3xx_ll_gpio.h"
 #include "scheduler.h" //SPA
+#include "hardware_config.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -74,8 +75,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))
 #define M1_ICL_SHUT_OUT_Pin LL_GPIO_PIN_15
 #define M1_ICL_SHUT_OUT_GPIO_Port GPIOC
+#endif
 #define M1_CURR_AMPL_U_Pin LL_GPIO_PIN_0
 #define M1_CURR_AMPL_U_GPIO_Port GPIOA
 #define M1_CURR_AMPL_V_Pin LL_GPIO_PIN_1
@@ -86,10 +89,12 @@ void Error_Handler(void);
 #define M1_CURR_AMPL_W_GPIO_Port GPIOA
 #define M1_BUS_VOLTAGE_Pin LL_GPIO_PIN_0
 #define M1_BUS_VOLTAGE_GPIO_Port GPIOB
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))
 #define M1_TEMPERATURE_Pin LL_GPIO_PIN_1
 #define M1_TEMPERATURE_GPIO_Port GPIOB
 #define M1_OVP_Pin LL_GPIO_PIN_12
 #define M1_OVP_GPIO_Port GPIOB
+#endif
 #define M1_PWM_UL_Pin LL_GPIO_PIN_13
 #define M1_PWM_UL_GPIO_Port GPIOB
 #define M1_PWM_VL_Pin LL_GPIO_PIN_14
@@ -104,8 +109,10 @@ void Error_Handler(void);
 #define M1_PWM_WH_GPIO_Port GPIOA
 #define M1_OCP_Pin LL_GPIO_PIN_11
 #define M1_OCP_GPIO_Port GPIOA
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))
 #define LED_Debug_Pin LL_GPIO_PIN_15
 #define LED_Debug_GPIO_Port GPIOA
+#endif
 #define UART_TX_Pin LL_GPIO_PIN_6
 #define UART_TX_GPIO_Port GPIOB
 #define UART_RX_Pin LL_GPIO_PIN_7

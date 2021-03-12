@@ -31,25 +31,25 @@ static Ram_Buf_Handle Mc_StateMachineStructMem_u32;
 
 /************************************ All the setting should be mapped into FLash *********************************************/
 //__weak __no_init const uint16_t   MIN_COMMANDABLE_SPEED	       @(FLASH_USER_START_ADDR + (2 *  Index_MIN_COMMANDABLE_SPEED	   ) );
-__weak const uint16_t   MIN_COMMANDABLE_SPEED	     @(FLASH_USER_START_ADDR + (2 *  Index_MIN_COMMANDABLE_SPEED	) ) = 300       ;             
-__weak const uint16_t   MAX_COMMANDABLE_SPEED        @(FLASH_USER_START_ADDR + (2 *  Index_MAX_COMMANDABLE_SPEED        ) ) = 2000      ;             
-__weak const uint16_t   SPEED_UP_RAMP_RATE           @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_UP_RAMP_RATE           ) ) = 200        ;             
-__weak const uint16_t   SPEED_DOWN_RAMP_RATE         @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_DOWN_RAMP_RATE         ) ) = 100       ;             
-__weak const uint16_t   SPEED_CONSIDERED_STOPPED     @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_CONSIDERED_STOPPED     ) ) = 200       ;             
-__weak const uint16_t   MotSpinTimeOut               @(FLASH_USER_START_ADDR + (2 *  Index_MotSpinTimeOut               ) ) = 4         ;             
+__weak const uint16_t   MIN_COMMANDABLE_SPEED	     @(FLASH_USER_START_ADDR + (2 *  Index_MIN_COMMANDABLE_SPEED	) ) = default_MIN_COMMANDABLE_SPEED       ;             
+__weak const uint16_t   MAX_COMMANDABLE_SPEED        @(FLASH_USER_START_ADDR + (2 *  Index_MAX_COMMANDABLE_SPEED        ) ) = default_MAX_COMMANDABLE_SPEED      ;             
+__weak const uint16_t   SPEED_UP_RAMP_RATE           @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_UP_RAMP_RATE           ) ) = default_SPEED_UP_RAMP_RATE       ;             
+__weak const uint16_t   SPEED_DOWN_RAMP_RATE         @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_DOWN_RAMP_RATE         ) ) = default_SPEED_DOWN_RAMP_RATE       ;             
+__weak const uint16_t   SPEED_CONSIDERED_STOPPED     @(FLASH_USER_START_ADDR + (2 *  Index_SPEED_CONSIDERED_STOPPED     ) ) = default_CONSIDERED_STOPPED       ;             
+__weak const uint16_t   MotSpinTimeOut               @(FLASH_USER_START_ADDR + (2 *  Index_MotSpinTimeOut               ) ) = default_MOTSPINTIMEOUT          ;             
 __weak const uint16_t   SpinPollPeriod               @(FLASH_USER_START_ADDR + (2 *  Index_SpinPollPeriod               ) ) = PHASE1_DURATION + PHASE2_DURATION  + PHASE3_DURATION + PHASE4_DURATION + PHASE5_DURATION; //7000      ;             
-__weak const uint16_t   numOfStartRetry              @(FLASH_USER_START_ADDR + (2 *  Index_numOfStartRetry              ) ) = 6         ;             
-__weak const uint16_t   StartRetryPeriod             @(FLASH_USER_START_ADDR + (2 *  Index_StartRetryPeriod             ) ) = 2000      ;             
-__weak const uint16_t   StartPeriodInc               @(FLASH_USER_START_ADDR + (2 *  Index_StartPeriodInc               ) ) = 10000     ;             
-__weak const uint16_t   over_current_threshold       @(FLASH_USER_START_ADDR + (2 *  Index_over_current_threshold       ) ) = 5000      ;             
-__weak const uint16_t   over_current_rpm_Reduce      @(FLASH_USER_START_ADDR + (2 *  Index_over_current_rpm_Reduce      ) ) = 10        ;             
-__weak const uint16_t   OvCurrent_derate_period      @(FLASH_USER_START_ADDR + (2 *  Index_OvCurrent_derate_period      ) ) = 200       ;             
-__weak const uint16_t   over_power_threshold         @(FLASH_USER_START_ADDR + (2 *  Index_over_power_threshold         ) ) = 10000      ;             
-__weak const uint16_t   over_power_rpm_Reduce        @(FLASH_USER_START_ADDR + (2 *  Index_over_power_rpm_Reduce        ) ) = 10        ;             
-__weak const uint16_t   OvPower_derate_period        @(FLASH_USER_START_ADDR + (2 *  Index_OvPower_derate_period        ) ) = 200       ;             
-__weak const uint16_t   over_temperature_threshold   @(FLASH_USER_START_ADDR + (2 *  Index_over_temperature_threshold   ) ) = 53        ;             
-__weak const uint16_t   over_temperature_rpm_Reduce  @(FLASH_USER_START_ADDR + (2 *  Index_over_temperature_rpm_Reduce  ) ) = 10        ;             
-__weak const uint16_t   OvTemp_derate_period         @(FLASH_USER_START_ADDR + (2 *  Index_OvTemp_derate_period         ) ) = 30000     ;     
+__weak const uint16_t   numOfStartRetry              @(FLASH_USER_START_ADDR + (2 *  Index_numOfStartRetry              ) ) = default_NUMSTARTRETRY          ;             
+__weak const uint16_t   StartRetryPeriod             @(FLASH_USER_START_ADDR + (2 *  Index_StartRetryPeriod             ) ) = default_START_RETRY_PERIOD      ;             
+__weak const uint16_t   StartPeriodInc               @(FLASH_USER_START_ADDR + (2 *  Index_StartPeriodInc               ) ) = default_START_PERIOD_INC     ;             
+__weak const uint16_t   over_current_threshold       @(FLASH_USER_START_ADDR + (2 *  Index_over_current_threshold       ) ) = default_OCP_THRESHOLD      ;             
+__weak const uint16_t   over_current_rpm_Reduce      @(FLASH_USER_START_ADDR + (2 *  Index_over_current_rpm_Reduce      ) ) = default_OCP_RPM_REDUCE       ;             
+__weak const uint16_t   OvCurrent_derate_period      @(FLASH_USER_START_ADDR + (2 *  Index_OvCurrent_derate_period      ) ) = default_OCP_DERATE_PERIOD       ;             
+__weak const uint16_t   over_power_threshold         @(FLASH_USER_START_ADDR + (2 *  Index_over_power_threshold         ) ) = default_OVP_THRESHOLD     ;             
+__weak const uint16_t   over_power_rpm_Reduce        @(FLASH_USER_START_ADDR + (2 *  Index_over_power_rpm_Reduce        ) ) = default_OVP_RPM_REDUCE         ;             
+__weak const uint16_t   OvPower_derate_period        @(FLASH_USER_START_ADDR + (2 *  Index_OvPower_derate_period        ) ) = default_OVP_DERATE_PERIOD      ;             
+__weak const uint16_t   over_temperature_threshold   @(FLASH_USER_START_ADDR + (2 *  Index_over_temperature_threshold   ) ) = default_OTP_THRESHOLD         ;             
+__weak const uint16_t   over_temperature_rpm_Reduce  @(FLASH_USER_START_ADDR + (2 *  Index_over_temperature_rpm_Reduce  ) ) = default_OTP_RPM_REDUCE        ;             
+__weak const uint16_t   OvTemp_derate_period         @(FLASH_USER_START_ADDR + (2 *  Index_OvTemp_derate_period         ) ) = default_OTP_DERATE_PERIOD     ;     
 
 
 // Application Constants
@@ -97,7 +97,8 @@ uint64_t tt_deratePowerPollTime;
 uint64_t tt_derateTempPollTime;
        
 //RPa: Stop and Brake
-uint64_t tt_TurnOnLowSideTime;
+uint64_t tt_StopWaitTime;
+#define STOP_WAIT_TIME 100   // Reduce this value when testing OTF
 
 //RPa: OTF temporary fix
 uint64_t tt_FaultOTFWaitTime_u64 = 0;
@@ -172,7 +173,7 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
           break;
         }
         case IDLE_MODULE: {
-          if((module_StateMachineControl.command_Speed != 0)&&(autorestart==TRUE))
+          if((module_StateMachineControl.command_Speed != 0)&&(autorestart==TRUE)&&(MC_GetSTMStateMotor1() == IDLE))
           {
             return_state_u8 = PRE_START_MODULE;
             break;
@@ -473,33 +474,41 @@ uint8_t module_Mc_StateMachine_u32(uint8_t module_id_u8, uint8_t prev_state_u8, 
     case STOP_MOTOR_MODULE: {
       //check motor current situation to perform motor stop sequency
       MC_StopMotor1();
+      
       return_state_u8 = MOTOR_STOPPING_MODULE;
       break;
     }
     case MOTOR_STOPPING_MODULE: {
-      if (BrakeHandle_M1.BrakingPhase == STARTRAMP)
+      
+      if ((A_CONTROLLED_BRAKING==1)&&(BrakeHandle_M1.BrakingPhase == TURNONLOWSIDE))
       {
-        tt_TurnOnLowSideTime = getSysCount() + 2000;
         return_state_u8 = MOTOR_BRAKING_MODULE;
         break;
       }   
-      else{
+      
+      if ((A_CONTROLLED_BRAKING==0)&&(MC_GetSTMStateMotor1() == STOP_IDLE))
+      {
+        tt_StopWaitTime = getSysCount() + STOP_WAIT_TIME;// RPa: can be removed or reduce stopping delay time
+        return_state_u8 = MOTOR_BRAKING_MODULE;
+        break;
+      }   
         return_state_u8 = MOTOR_STOPPING_MODULE;
         break;
-      }
       
-      break;
     }
     case MOTOR_BRAKING_MODULE: {
-      if (getSysCount()>= tt_TurnOnLowSideTime)
+      if ((A_CONTROLLED_BRAKING==1)&&(BrakeHandle_M1.BrakingPhase == STARTRAMP))
       {
         return_state_u8 = IDLE_MODULE;
         break;
       }
-      else{
-        return_state_u8 = MOTOR_BRAKING_MODULE;
+      if ((A_CONTROLLED_BRAKING==0)&&(getSysCount()>= tt_StopWaitTime))
+      {
+        return_state_u8 = IDLE_MODULE;
         break;
       }
+      
+      return_state_u8 = MOTOR_BRAKING_MODULE;
       break; 
     }             
     

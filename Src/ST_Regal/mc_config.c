@@ -21,6 +21,7 @@
 #include "parameters_conversion.h"
 #include "mc_parameters.h"
 #include "mc_config.h"
+#include "hardware_config.h"
 #include "zz_module_flash.h"
 
 /* USER CODE BEGIN Additional include */
@@ -284,7 +285,11 @@ NTC_Handle_t TempSensorParamsM1 =
   .TempRegConv =
   {
     .regADC = ADC1,
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))   
     .channel = MC_ADC_CHANNEL_12,
+#elif HARDWARE_VERSION == HARDWARE_VERSION_1p3KW
+    .channel = MC_ADC_CHANNEL_14,   
+#endif
     .samplingTime = M1_TEMP_SAMPLING_TIME,   
   },  
   .hLowPassFilterBW        = M1_TEMP_SW_FILTER_BW_FACTOR,
@@ -360,8 +365,10 @@ CircleLimitation_Handle_t CircleLimitationM1 =
 DOUT_handle_t ICLDOUTParamsM1 =
 {
   .OutputState       = INACTIVE,                   
+#if ((HARDWARE_VERSION == HARDWARE_VERSION_4p5KW) || (HARDWARE_VERSION == HARDWARE_VERSION_8KW))
   .hDOutputPort      = M1_ICL_SHUT_OUT_GPIO_Port,
   .hDOutputPin       = M1_ICL_SHUT_OUT_Pin,		
+#endif
   .bDOutputPolarity  = DOUT_ACTIVE_LOW		
 };
 

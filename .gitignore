@@ -11,3 +11,12 @@
 *.out
 *.ninja_log
 *.pbw
+*.bat
+*.ioc
+*.wb
+*.settings
+*.wb_def
+*.stmcx
+*.log
+*.bat
+*.ps1

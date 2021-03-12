@@ -62,7 +62,9 @@
 #define BEMF_DEC 8
 #define TREF_SYNC (int16_t) (0.7 * PHASE3_FINAL_CURRENT )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+//RPa: parameters necessary for auto-tune
+#define default_MOTOR_INERTIA 1u
+#define default_MOTOR_VISCOUS_DAMPING 1u
 ///////////////////////////////////////////////////////////////////////////////////
 //Braking and On-the-fly definitions for default value
 #define default_CONTROLLED_BRAKING      1u
@@ -81,7 +83,26 @@
 #define default_OTF_MAX_SYNC_SPEED      150
 #define default_OTF_MIN_SYNC_SPEED      30
 //////////////////////////////////////////////////////////
-
+//default settings for motor state machine
+#define default_MIN_COMMANDABLE_SPEED   300
+#define default_MAX_COMMANDABLE_SPEED   2000
+#define default_SPEED_UP_RAMP_RATE      200
+#define default_SPEED_DOWN_RAMP_RATE    100
+#define default_CONSIDERED_STOPPED      200
+#define default_MOTSPINTIMEOUT          4
+#define default_NUMSTARTRETRY           6
+#define default_START_RETRY_PERIOD      2000
+#define default_START_PERIOD_INC        10000
+#define default_OCP_THRESHOLD           5000
+#define default_OCP_RPM_REDUCE          10
+#define default_OCP_DERATE_PERIOD       200
+#define default_OVP_THRESHOLD           10000
+#define default_OVP_RPM_REDUCE          10
+#define default_OVP_DERATE_PERIOD       200
+#define default_OTP_THRESHOLD           53
+#define default_OTP_RPM_REDUCE          10
+#define default_OTP_DERATE_PERIOD       30000
+//////////////////////////////////////////////////////////
 typedef enum IMAX_PHASE {
     STARTRAMP = 0,
     RAMPUP,

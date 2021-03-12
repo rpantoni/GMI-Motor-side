@@ -50,7 +50,6 @@ void UI_TaskInit( uint32_t* pUICfg, uint8_t bMCNum, MCI_Handle_t* pMCIList[],
   
   pMCP = &MCP_UI_Params;
   pMCP->_Super = UI_Params;
-  
 }
 
 __weak void UI_Scheduler(void)
